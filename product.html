@@ -42,7 +42,7 @@
 
             <!-- Details -->
             <div>
-                <h1 class="text-3xl font-medium mb-2">Premium Bridal Suit</h1>
+                <h1 class="text-3xl font-medium mb-2" id="p-name">Premium Bridal Suit</h1>
                 <div class="flex items-center gap-3 mb-4">
                     <span class="text-gray-400 line-through text-lg">Rs. 5,000</span>
                     <span id="display-price" class="text-2xl font-bold text-[#C5A982]">Rs. 2,500</span>
@@ -68,9 +68,9 @@
                     <button onclick="addToCart()" class="w-full border-2 border-black py-3 font-bold uppercase hover:bg-black hover:text-white transition">
                         Add to Cart
                     </button>
-                    <a href="checkout.html" class="w-full bg-[#C5A982] text-white py-3 font-bold uppercase hover:bg-[#b09268] transition shadow-lg text-center">
+                    <button onclick="buyNow()" class="w-full bg-[#C5A982] text-white py-3 font-bold uppercase hover:bg-[#b09268] transition shadow-lg text-center">
                         Buy Now
-                    </a>
+                    </button>
                 </div>
 
                 <div class="mt-8 border-t pt-6 space-y-3 text-sm text-gray-600">
@@ -100,23 +100,37 @@
     </footer>
 
     <script>
-        let basePrice = 2500; // Asli Price
+        let basePrice = 2500; 
 
         function updateQty(change) {
             let qtyInput = document.getElementById('qty');
             let newQty = parseInt(qtyInput.value) + change;
-            
             if (newQty < 1) newQty = 1;
-            
             qtyInput.value = newQty;
             
-            // Update Price Display
             let newPrice = basePrice * newQty;
             document.getElementById('display-price').innerText = "Rs. " + newPrice.toLocaleString();
         }
 
         function addToCart() {
             alert("Item added to cart!");
+        }
+
+        function buyNow() {
+            const qty = parseInt(document.getElementById('qty').value);
+            const total = basePrice * qty;
+            
+            // Save Order Data to LocalStorage
+            const orderData = {
+                name: "Premium Bridal Suit",
+                price: basePrice,
+                qty: qty,
+                total: total
+            };
+            localStorage.setItem('checkoutOrder', JSON.stringify(orderData));
+            
+            // Go to Checkout
+            window.location.href = "checkout.html";
         }
     </script>
 </body>

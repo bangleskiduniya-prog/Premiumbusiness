@@ -38,14 +38,14 @@
                 <div class="bg-white p-6 shadow-sm rounded-lg border-2 border-[#C5A982]">
                     <h3 class="text-lg font-bold mb-4 text-center uppercase">Your Order</h3>
                     
-                    <div class="space-y-3 mb-6 border-b pb-4 text-sm">
-                        <div class="flex justify-between"><span>Premium Bridal Suit (x1)</span><span>Rs. 2,500</span></div>
-                        <div class="flex justify-between"><span>Men's Leather Shoes (x1)</span><span>Rs. 1,200</span></div>
+                    <!-- Dynamic Order Items -->
+                    <div id="order-items" class="space-y-3 mb-6 border-b pb-4 text-sm">
+                        <!-- Items will be loaded here via JS -->
                     </div>
 
                     <div class="flex justify-between mb-6 text-xl font-bold text-[#C5A982]">
                         <span>Total</span>
-                        <span>Rs. 3,900</span>
+                        <span id="total-price">Rs. 0</span>
                     </div>
 
                     <!-- BUTTON 1: WhatsApp -->
@@ -87,6 +87,31 @@
         import { db } from './config.js';
         import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
+        // Load Data from LocalStorage
+        let orderData = JSON.parse(localStorage.getItem('checkoutOrder'));
+        
+        // Fallback if no data (Direct access)
+        if (!orderData) {
+            orderData = { name: "Premium Bridal Suit", price: 2500, qty: 1, total: 2500 };
+        }
+
+        // Display Data
+        const itemsContainer = document.getElementById('order-items');
+        itemsContainer.innerHTML = `
+            <div class="flex justify-between">
+                <span>${orderData.name} (x${orderData.qty})</span>
+                <span>Rs. ${orderData.total.toLocaleString()}</span>
+            </div>
+            <div class="flex justify-between text-gray-500 text-xs mt-1">
+                <span>Shipping</span>
+                <span>Rs. 200</span>
+            </div>
+        `;
+        
+        const finalTotal = orderData.total + 200;
+        document.getElementById('total-price').innerText = "Rs. " + finalTotal.toLocaleString();
+
+        // Place Order Function
         window.placeOrder = async (type) => {
             const name = document.getElementById('name').value;
             const phone = document.getElementById('phone').value;
@@ -101,23 +126,23 @@
             document.getElementById('status-msg').innerText = "Processing Order...";
 
             try {
-                // 1. Save to Database (Hamesha hoga)
+                // 1. Save to Database
                 await addDoc(collection(db, "orders"), {
                     customer: { name, phone, address, notes },
-                    items: "Bridal Suit, Shoes", // Dummy for now
-                    total: 3900,
+                    items: `${orderData.name} (x${orderData.qty})`,
+                    total: finalTotal,
                     method: type === 'whatsapp' ? "WhatsApp" : "Direct Website",
                     status: "Pending",
                     date: new Date()
                 });
 
-                // 2. Action based on Button
+                // 2. Action
                 if (type === 'whatsapp') {
-                    let message = `*New Order*%0AName: ${name}%0APhone: ${phone}%0AAddress: ${address}%0ATotal: Rs. 3,900`;
+                    let message = `*New Order*%0AName: ${name}%0APhone: ${phone}%0AAddress: ${address}%0AItem: ${orderData.name} (x${orderData.qty})%0ATotal: Rs. ${finalTotal.toLocaleString()}`;
                     window.open(`https://wa.me/923035958676?text=${message}`, '_blank');
                 } else {
-                    // Direct Order Success
                     alert("Order Placed Successfully! We will contact you soon.");
+                    localStorage.removeItem('checkoutOrder'); // Clear data
                     window.location.href = "index.html";
                 }
 
