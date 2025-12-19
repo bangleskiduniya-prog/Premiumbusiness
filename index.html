@@ -12,14 +12,22 @@
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .gold-btn { background-color: #C5A982; color: white; }
         .gold-text { color: #C5A982; }
+        /* Floating WhatsApp */
+        .float-wa { position: fixed; bottom: 90px; right: 20px; background-color: #25d366; color: white; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 2px 2px 10px rgba(0,0,0,0.2); z-index: 100; transition: transform 0.3s; }
+        .float-wa:hover { transform: scale(1.1); }
     </style>
 </head>
 <body class="bg-white text-gray-800">
 
+    <!-- FLOATING WHATSAPP ICON -->
+    <a href="#" id="whatsapp-float" target="_blank" class="float-wa hidden">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
     <!-- 1. HEADER -->
     <nav class="sticky top-0 z-40 bg-white shadow-sm">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <button class="text-2xl"><i class="fas fa-bars"></i></button>
+            <button onclick="toggleMenu()" class="text-2xl"><i class="fas fa-bars"></i></button>
             <div class="text-2xl font-bold tracking-widest uppercase border-2 border-black px-2 py-1">
                 Prime<span class="font-light">Business</span>
             </div>
@@ -32,164 +40,50 @@
         </div>
     </nav>
 
+    <!-- SIDEBAR MENU -->
+    <div id="sidebar" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black bg-opacity-50" onclick="toggleMenu()"></div>
+        <div class="absolute left-0 top-0 h-full w-64 bg-white shadow-2xl p-6 transform transition-transform duration-300">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-xl font-bold">Menu</h2>
+                <button onclick="toggleMenu()"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <ul id="sidebar-links" class="space-y-4 text-lg">
+                <!-- Links will load here -->
+            </ul>
+        </div>
+    </div>
+
     <!-- 2. HERO SLIDER -->
     <header class="relative w-full h-[500px] overflow-hidden bg-gray-100">
-        <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070" class="w-full h-full object-cover opacity-90">
-        <div class="absolute inset-0 flex flex-col justify-center items-center text-white bg-black bg-opacity-30">
+        <div id="hero-slider" class="w-full h-full relative">
+            <img src="https://via.placeholder.com/1500x800?text=Loading..." class="w-full h-full object-cover">
+        </div>
+        <div class="absolute inset-0 flex flex-col justify-center items-center text-white bg-black bg-opacity-30 z-10">
             <h2 class="text-5xl font-light mb-6 tracking-wider text-center">New Collection</h2>
-            <a href="#suits-section" class="bg-white text-black px-10 py-3 uppercase tracking-widest text-sm hover:bg-black hover:text-white transition">Shop Now</a>
+            <button class="bg-white text-black px-10 py-3 uppercase tracking-widest text-sm hover:bg-black hover:text-white transition">Shop Now</button>
         </div>
     </header>
 
-    <!-- 3. SHOP BY CATEGORY (Top Grid) -->
+    <!-- 3. SHOP BY CATEGORY -->
     <section class="py-12 container mx-auto px-4">
         <h3 class="text-center text-2xl font-medium mb-8 uppercase tracking-wide">Shop By Categories</h3>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <a href="#suits-section" class="group cursor-pointer text-center block">
-                <div class="overflow-hidden mb-3 rounded-lg"><img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500" class="w-full h-40 object-cover group-hover:scale-110 transition duration-500"></div>
-                <h4 class="uppercase font-bold text-xs tracking-widest">Suits</h4>
-            </a>
-            <a href="#jewelry-section" class="group cursor-pointer text-center block">
-                <div class="overflow-hidden mb-3 rounded-lg"><img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500" class="w-full h-40 object-cover group-hover:scale-110 transition duration-500"></div>
-                <h4 class="uppercase font-bold text-xs tracking-widest">Jewelry</h4>
-            </a>
-            <a href="#shoes-section" class="group cursor-pointer text-center block">
-                <div class="overflow-hidden mb-3 rounded-lg"><img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500" class="w-full h-40 object-cover group-hover:scale-110 transition duration-500"></div>
-                <h4 class="uppercase font-bold text-xs tracking-widest">Shoes</h4>
-            </a>
-            <a href="#bangles-section" class="group cursor-pointer text-center block">
-                <div class="overflow-hidden mb-3 rounded-lg"><img src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" class="w-full h-40 object-cover group-hover:scale-110 transition duration-500"></div>
-                <h4 class="uppercase font-bold text-xs tracking-widest">Bangles</h4>
-            </a>
+        <div id="category-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <p class="text-center col-span-4">Loading Categories...</p>
         </div>
     </section>
 
-    <!-- 4. SECTION 1: SUITS (Horizontal Slider) -->
-    <section id="suits-section" class="py-10 bg-gray-50">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-between items-end mb-6">
-                <h3 class="text-xl font-bold uppercase tracking-wide border-l-4 border-[#C5A982] pl-3">Ladies Suits</h3>
-                <a href="#" class="text-xs text-gray-500 underline">View All</a>
-            </div>
-            <div class="flex overflow-x-auto gap-4 pb-4 scrollbar-hide">
-                <!-- Product 1 -->
-                <div class="min-w-[220px] bg-white shadow-sm rounded-lg overflow-hidden group">
-                    <div class="relative">
-                        <a href="product.html"><img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500" class="w-full h-64 object-cover"></a>
-                        <button class="absolute bottom-0 w-full bg-black text-white text-xs py-2 uppercase font-bold translate-y-full group-hover:translate-y-0 transition">Add to Cart</button>
-                    </div>
-                    <div class="p-3">
-                        <h4 class="text-sm font-medium truncate">Bridal Red Gown</h4>
-                        <p class="text-[#C5A982] font-bold text-sm">Rs. 5,000</p>
-                    </div>
-                </div>
-                <!-- Product 2 -->
-                <div class="min-w-[220px] bg-white shadow-sm rounded-lg overflow-hidden group">
-                    <div class="relative">
-                        <a href="product.html"><img src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" class="w-full h-64 object-cover"></a>
-                        <button class="absolute bottom-0 w-full bg-black text-white text-xs py-2 uppercase font-bold translate-y-full group-hover:translate-y-0 transition">Add to Cart</button>
-                    </div>
-                    <div class="p-3">
-                        <h4 class="text-sm font-medium truncate">Party Wear Suit</h4>
-                        <p class="text-[#C5A982] font-bold text-sm">Rs. 2,500</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- 4. DYNAMIC SECTIONS (Swipeable) -->
+    <div id="dynamic-sections">
+        <!-- Sections will load here from Database -->
+    </div>
 
-    <!-- 5. SECTION 2: JEWELRY (Horizontal Slider) -->
-    <section id="jewelry-section" class="py-10 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-between items-end mb-6">
-                <h3 class="text-xl font-bold uppercase tracking-wide border-l-4 border-[#C5A982] pl-3">Jewelry Collection</h3>
-                <a href="#" class="text-xs text-gray-500 underline">View All</a>
-            </div>
-            <div class="flex overflow-x-auto gap-4 pb-4 scrollbar-hide">
-                <div class="min-w-[220px] bg-white border border-gray-100 rounded-lg overflow-hidden group">
-                    <div class="relative">
-                        <a href="product.html"><img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500" class="w-full h-64 object-cover"></a>
-                        <button class="absolute bottom-0 w-full bg-black text-white text-xs py-2 uppercase font-bold translate-y-full group-hover:translate-y-0 transition">Add to Cart</button>
-                    </div>
-                    <div class="p-3">
-                        <h4 class="text-sm font-medium truncate">Gold Necklace</h4>
-                        <p class="text-[#C5A982] font-bold text-sm">Rs. 1,500</p>
-                    </div>
-                </div>
-                <div class="min-w-[220px] bg-white border border-gray-100 rounded-lg overflow-hidden group">
-                    <div class="relative">
-                        <a href="product.html"><img src="https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=500" class="w-full h-64 object-cover"></a>
-                        <button class="absolute bottom-0 w-full bg-black text-white text-xs py-2 uppercase font-bold translate-y-full group-hover:translate-y-0 transition">Add to Cart</button>
-                    </div>
-                    <div class="p-3">
-                        <h4 class="text-sm font-medium truncate">Diamond Ring</h4>
-                        <p class="text-[#C5A982] font-bold text-sm">Rs. 2,000</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 6. SECTION 3: SHOES (Horizontal Slider) -->
-    <section id="shoes-section" class="py-10 bg-gray-50">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-between items-end mb-6">
-                <h3 class="text-xl font-bold uppercase tracking-wide border-l-4 border-[#C5A982] pl-3">Shoes Collection</h3>
-                <a href="#" class="text-xs text-gray-500 underline">View All</a>
-            </div>
-            <div class="flex overflow-x-auto gap-4 pb-4 scrollbar-hide">
-                <div class="min-w-[220px] bg-white shadow-sm rounded-lg overflow-hidden group">
-                    <div class="relative">
-                        <a href="product.html"><img src="https://images.unsplash.com/photo-1560343090-f0409e92791a?w=500" class="w-full h-64 object-cover"></a>
-                        <button class="absolute bottom-0 w-full bg-black text-white text-xs py-2 uppercase font-bold translate-y-full group-hover:translate-y-0 transition">Add to Cart</button>
-                    </div>
-                    <div class="p-3">
-                        <h4 class="text-sm font-medium truncate">Men's Leather Shoes</h4>
-                        <p class="text-[#C5A982] font-bold text-sm">Rs. 1,200</p>
-                    </div>
-                </div>
-                <div class="min-w-[220px] bg-white shadow-sm rounded-lg overflow-hidden group">
-                    <div class="relative">
-                        <a href="product.html"><img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500" class="w-full h-64 object-cover"></a>
-                        <button class="absolute bottom-0 w-full bg-black text-white text-xs py-2 uppercase font-bold translate-y-full group-hover:translate-y-0 transition">Add to Cart</button>
-                    </div>
-                    <div class="p-3">
-                        <h4 class="text-sm font-medium truncate">High Heels</h4>
-                        <p class="text-[#C5A982] font-bold text-sm">Rs. 1,800</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 7. SECTION 4: BANGLES (Horizontal Slider) -->
-    <section id="bangles-section" class="py-10 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-between items-end mb-6">
-                <h3 class="text-xl font-bold uppercase tracking-wide border-l-4 border-[#C5A982] pl-3">Bangles & Sets</h3>
-                <a href="#" class="text-xs text-gray-500 underline">View All</a>
-            </div>
-            <div class="flex overflow-x-auto gap-4 pb-4 scrollbar-hide">
-                <div class="min-w-[220px] bg-white border border-gray-100 rounded-lg overflow-hidden group">
-                    <div class="relative">
-                        <a href="product.html"><img src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" class="w-full h-64 object-cover"></a>
-                        <button class="absolute bottom-0 w-full bg-black text-white text-xs py-2 uppercase font-bold translate-y-full group-hover:translate-y-0 transition">Add to Cart</button>
-                    </div>
-                    <div class="p-3">
-                        <h4 class="text-sm font-medium truncate">Gold Bangles Set</h4>
-                        <p class="text-[#C5A982] font-bold text-sm">Rs. 1,000</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 8. FOOTER (Black & Gold) -->
+    <!-- 5. FOOTER -->
     <footer class="bg-black text-white pt-12 pb-24">
         <div class="container mx-auto px-4">
             <div class="mb-12">
                 <h3 class="text-[#C5A982] text-xl font-bold mb-2">About Us</h3>
-                <p class="text-gray-400 text-sm mb-6">At Prime Business, we believe that fabric is more than just material – it's an expression of style, tradition, and comfort.</p>
+                <p id="footer-about" class="text-gray-400 text-sm mb-6">Loading...</p>
                 <div class="flex flex-col gap-2">
                     <input type="email" placeholder="Enter Your Email Address" class="w-full p-3 text-black outline-none bg-white">
                     <button class="gold-btn w-full py-3 font-bold uppercase tracking-widest text-sm">SUBSCRIBE</button>
@@ -218,14 +112,10 @@
             <div class="mt-8">
                 <h4 class="text-[#C5A982] font-bold mb-4 text-lg">Contact Info</h4>
                 <ul class="space-y-3 text-white text-sm">
-                    <li class="flex items-center gap-2"><i class="fas fa-phone-alt text-[#C5A982]"></i> +92 303 5958676</li>
-                    <li class="flex items-center gap-2"><i class="fas fa-envelope text-[#C5A982]"></i> creativejunaid0012@gmail.com</li>
+                    <li class="flex items-center gap-2"><i class="fas fa-phone-alt text-[#C5A982]"></i> <span id="footer-phone">...</span></li>
+                    <li class="flex items-center gap-2"><i class="fas fa-envelope text-[#C5A982]"></i> <span id="footer-email">...</span></li>
                 </ul>
-                <div class="flex gap-4 mt-4">
-                    <a href="#" class="text-[#C5A982] text-xl"><i class="fab fa-facebook"></i></a>
-                    <a href="#" class="text-[#C5A982] text-xl"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="text-[#C5A982] text-xl"><i class="fab fa-whatsapp"></i></a>
-                </div>
+                <div id="social-links" class="flex gap-4 mt-4 text-[#C5A982] text-xl"></div>
             </div>
             <div class="mt-10 pt-4 border-t border-gray-800 text-center text-xs text-gray-500">
                 &copy; 2025 Prime Business. All rights reserved.
@@ -233,17 +123,102 @@
         </div>
     </footer>
 
-    <!-- 9. BOTTOM NAVIGATION -->
+    <!-- BOTTOM NAV -->
     <div class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 flex justify-around py-3 z-50 text-gray-500 text-xs font-medium shadow-[0_-5px_10px_rgba(0,0,0,0.05)]">
         <a href="index.html" class="flex flex-col items-center text-black"><i class="fas fa-home text-xl mb-1"></i>Home</a>
         <a href="#" class="flex flex-col items-center hover:text-black"><i class="far fa-heart text-xl mb-1"></i>Wishlist</a>
         <a href="cart.html" class="flex flex-col items-center hover:text-black relative">
             <i class="fas fa-shopping-bag text-xl mb-1"></i>
-            <span class="absolute top-0 right-4 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">1</span>
+            <span class="absolute top-0 right-4 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">0</span>
             Cart
         </a>
         <a href="profile.html" class="flex flex-col items-center hover:text-black"><i class="far fa-user text-xl mb-1"></i>Account</a>
     </div>
 
+    <!-- LOGIC -->
+    <script type="module">
+        import { db } from './config.js';
+        import { collection, getDocs, doc, getDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+        // 1. LOAD SETTINGS
+        async function loadSettings() {
+            const docSnap = await getDoc(doc(db, "settings", "general"));
+            if (docSnap.exists()) {
+                const s = docSnap.data();
+                document.getElementById('footer-about').innerText = s.about || "";
+                document.getElementById('footer-phone').innerText = s.phone || "";
+                document.getElementById('footer-email').innerText = s.email || "";
+                
+                if(s.phone) {
+                    const waBtn = document.getElementById('whatsapp-float');
+                    waBtn.href = `https://wa.me/${s.phone}`;
+                    waBtn.classList.remove('hidden');
+                }
+
+                const socialDiv = document.getElementById('social-links');
+                if(s.fb) socialDiv.innerHTML += `<a href="${s.fb}"><i class="fab fa-facebook"></i></a>`;
+                if(s.insta) socialDiv.innerHTML += `<a href="${s.insta}"><i class="fab fa-instagram"></i></a>`;
+            }
+        }
+
+        // 2. LOAD HERO SLIDER
+        async function loadHero() {
+            const container = document.getElementById('hero-slider');
+            const snap = await getDocs(query(collection(db, "hero_slider"), orderBy("timestamp", "desc")));
+            if(!snap.empty) {
+                container.innerHTML = '';
+                let images = [];
+                snap.forEach(d => images.push(d.data().image));
+                let idx = 0;
+                container.innerHTML = `<img src="${images[0]}" class="w-full h-full object-cover transition-opacity duration-1000" id="slide-img">`;
+                if(images.length > 1) {
+                    setInterval(() => {
+                        idx = (idx + 1) % images.length;
+                        document.getElementById('slide-img').src = images[idx];
+                    }, 3000);
+                }
+            }
+        }
+
+        // 3. LOAD CONTENT (Categories & Products)
+        async function loadContent() {
+            const catGrid = document.getElementById('category-grid');
+            const sectionsDiv = document.getElementById('dynamic-sections');
+            const sidebar = document.getElementById('sidebar-links');
+            
+            catGrid.innerHTML = ''; sectionsDiv.innerHTML = ''; sidebar.innerHTML = '';
+
+            const catSnap = await getDocs(query(collection(db, "categories"), orderBy("timestamp", "desc")));
+            
+            for (const d of catSnap.docs) {
+                const cat = d.data();
+                const catId = d.id;
+
+                // Add to Grid
+                catGrid.innerHTML += `<a href="#sec-${catId}" class="group cursor-pointer text-center block"><div class="overflow-hidden mb-3 rounded-lg"><img src="${cat.image}" class="w-full h-40 object-cover group-hover:scale-110 transition duration-500"></div><h4 class="uppercase font-bold text-xs tracking-widest">${cat.name}</h4></a>`;
+                
+                // Add to Sidebar
+                sidebar.innerHTML += `<li><a href="#sec-${catId}" onclick="toggleMenu()" class="block border-b pb-2">${cat.name}</a></li>`;
+
+                // Load Products for this Category
+                const prodQuery = query(collection(db, "products"), where("category", "==", cat.name));
+                const prodSnap = await getDocs(prodQuery);
+
+                if (!prodSnap.empty) {
+                    let productsHtml = '';
+                    prodSnap.forEach(pDoc => {
+                        const p = pDoc.data();
+                        // Link to Product Page with ID
+                        productsHtml += `<div class="min-w-[220px] bg-white shadow-sm rounded-lg overflow-hidden group"><div class="relative"><a href="product.html?id=${pDoc.id}"><img src="${p.images[0]}" class="w-full h-64 object-cover"></a><button class="absolute bottom-0 w-full bg-black text-white text-xs py-2 uppercase font-bold translate-y-full group-hover:translate-y-0 transition">Add to Cart</button></div><div class="p-3"><h4 class="text-sm font-medium truncate">${p.name}</h4><p class="text-[#C5A982] font-bold text-sm">Rs. ${p.price}</p></div></div>`;
+                    });
+
+                    sectionsDiv.innerHTML += `<section id="sec-${catId}" class="py-10 bg-gray-50 odd:bg-white"><div class="container mx-auto px-4"><div class="flex justify-between items-end mb-6"><h3 class="text-xl font-bold uppercase tracking-wide border-l-4 border-[#C5A982] pl-3">${cat.name}</h3><a href="#" class="text-xs text-gray-500 underline">View All</a></div><div class="flex overflow-x-auto gap-4 pb-4 scrollbar-hide">${productsHtml}</div></div></section>`;
+                }
+            }
+        }
+
+        window.toggleMenu = () => { document.getElementById('sidebar').classList.toggle('hidden'); }
+        loadSettings(); loadHero(); loadContent();
+    </script>
 </body>
 </html>
