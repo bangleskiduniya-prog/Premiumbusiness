@@ -94,7 +94,8 @@
                     </div>
 
                     <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded transition flex items-center justify-center gap-2 shadow-lg">
-                        <i class="fab fa-whatsapp text-xl"></i> Place Order on WhatsApp
+                        <span id="btn-text">Place Order on WhatsApp</span>
+                        <i class="fas fa-spinner fa-spin hidden" id="btn-loader"></i>
                     </button>
                 </div>
             </div>
@@ -103,8 +104,11 @@
     </section>
 
     <!-- Logic Script -->
-    <script>
-        document.getElementById('checkout-form').addEventListener('submit', function(e) {
+    <script type="module">
+        import { db } from './config.js';
+        import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+        document.getElementById('checkout-form').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             // 1. Get Form Values
@@ -114,26 +118,54 @@
             const city = document.getElementById('city').value;
             const notes = document.getElementById('notes').value;
 
-            // 2. Create Message for WhatsApp
-            // (Ye message customer ke phone se aapke phone par jayega)
-            let message = `*New Order Request - Prime Business*%0A%0A`;
-            message += `*Customer Details:*%0A`;
-            message += `Name: ${name}%0A`;
-            message += `Phone: ${phone}%0A`;
-            message += `Address: ${address}, ${city}%0A`;
-            if(notes) message += `Notes: ${notes}%0A`;
-            
-            message += `%0A*Order Summary:*%0A`;
-            message += `- Premium Bridal Suit (x1): Rs. 2,500%0A`;
-            message += `- Men's Leather Shoes (x1): Rs. 1,200%0A`;
-            message += `Shipping: Rs. 200%0A`;
-            message += `*TOTAL: Rs. 3,900*`;
+            // Show Loader
+            const btnText = document.getElementById('btn-text');
+            const btnLoader = document.getElementById('btn-loader');
+            btnText.innerText = "Processing...";
+            btnLoader.classList.remove('hidden');
 
-            // 3. Open WhatsApp
-            // Aapka number: 923035958676
-            const whatsappUrl = `https://wa.me/923035958676?text=${message}`;
-            
-            window.open(whatsappUrl, '_blank');
+            try {
+                // 2. Save to Firebase Database
+                await addDoc(collection(db, "orders"), {
+                    customer: { name, phone, address, city, notes },
+                    items: [
+                        { name: "Premium Bridal Suit", price: 2500, qty: 1 },
+                        { name: "Men's Leather Shoes", price: 1200, qty: 1 }
+                    ],
+                    total: 3900,
+                    status: "Pending",
+                    orderDate: new Date()
+                });
+
+                // 3. Create WhatsApp Message
+                let message = `*New Order Request - Prime Business*%0A%0A`;
+                message += `*Customer Details:*%0A`;
+                message += `Name: ${name}%0A`;
+                message += `Phone: ${phone}%0A`;
+                message += `Address: ${address}, ${city}%0A`;
+                if(notes) message += `Notes: ${notes}%0A`;
+                
+                message += `%0A*Order Summary:*%0A`;
+                message += `- Premium Bridal Suit (x1): Rs. 2,500%0A`;
+                message += `- Men's Leather Shoes (x1): Rs. 1,200%0A`;
+                message += `Shipping: Rs. 200%0A`;
+                message += `*TOTAL: Rs. 3,900*`;
+
+                // 4. Open WhatsApp
+                const whatsappUrl = `https://wa.me/923035958676?text=${message}`;
+                window.open(whatsappUrl, '_blank');
+
+                // 5. Reset Form
+                alert("Order Placed Successfully!");
+                window.location.href = "index.html";
+
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Something went wrong. Please try again.");
+            } finally {
+                btnText.innerText = "Place Order on WhatsApp";
+                btnLoader.classList.add('hidden');
+            }
         });
     </script>
 

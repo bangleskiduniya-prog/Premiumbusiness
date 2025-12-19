@@ -9,27 +9,36 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap');
         body { font-family: 'Jost', sans-serif; }
+        
+        /* Hide Scrollbar for Swipe Effect */
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .gold-text { color: #C5A982; }
+        .gold-bg { background-color: #C5A982; }
         .gold-btn { background-color: #C5A982; color: white; }
         .gold-btn:hover { background-color: #b09268; }
-        .gold-text { color: #C5A982; }
     </style>
 </head>
 <body class="bg-white text-gray-800 flex flex-col min-h-screen">
 
-    <!-- 1. HEADER -->
+    <!-- 1. HEADER (Bin Saif Style) -->
     <nav class="sticky top-0 z-50 bg-white shadow-sm">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <!-- Left -->
             <div class="flex items-center gap-4">
                 <button class="text-2xl"><i class="fas fa-bars"></i></button>
             </div>
+            <!-- Center -->
             <div class="text-2xl font-bold tracking-widest uppercase border-2 border-black px-2 py-1">
                 Prime<span class="font-light">Business</span>
             </div>
+            <!-- Right -->
             <div class="flex items-center gap-5">
                 <a href="profile.html" class="text-xl"><i class="far fa-user"></i></a>
                 <a href="cart.html" class="relative text-xl">
                     <i class="fas fa-shopping-bag"></i>
-                    <span class="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">0</span>
+                    <span class="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">2</span>
                 </a>
             </div>
         </div>
@@ -39,64 +48,68 @@
     <header class="relative w-full h-[500px] overflow-hidden bg-gray-100">
         <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070" class="w-full h-full object-cover opacity-90">
         <div class="absolute inset-0 flex flex-col justify-center items-center text-white bg-black bg-opacity-30">
-            <h2 class="text-5xl font-light mb-6 tracking-wider">New Collection</h2>
-            <a href="#products" class="bg-white text-black px-10 py-3 uppercase tracking-widest text-sm hover:bg-black hover:text-white transition">Shop Now</a>
+            <h2 class="text-5xl font-light mb-6 tracking-wider text-center">New Collection</h2>
+            <a href="#dresses-section" class="bg-white text-black px-10 py-3 uppercase tracking-widest text-sm hover:bg-black hover:text-white transition">Shop Now</a>
         </div>
     </header>
 
-    <!-- 3. SHOP BY CATEGORY (4 Columns - Fixed) -->
+    <!-- 3. SHOP BY CATEGORY (Clickable & Linked) -->
     <section class="py-16 container mx-auto px-4">
         <h3 class="text-center text-3xl font-medium mb-10 uppercase tracking-wide">Shop By Categories</h3>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <!-- Cat 1 -->
-            <div class="group cursor-pointer text-center">
+            
+            <!-- Cat 1: Dresses -->
+            <a href="#dresses-section" class="group cursor-pointer text-center block">
                 <div class="overflow-hidden mb-4 relative">
-                    <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500" class="w-full h-80 object-cover group-hover:scale-110 transition duration-700">
+                    <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500" class="w-full h-80 object-cover group-hover:scale-110 transition duration-700">
                     <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition"></div>
                 </div>
+                <h4 class="uppercase font-bold tracking-widest text-sm">Dresses</h4>
+            </a>
+
+            <!-- Cat 2: Jewelry -->
+            <a href="#jewelry-section" class="group cursor-pointer text-center block">
+                <div class="overflow-hidden mb-4 relative">
+                    <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500" class="w-full h-80 object-cover group-hover:scale-110 transition duration-700">
+                </div>
                 <h4 class="uppercase font-bold tracking-widest text-sm">Jewelry</h4>
-            </div>
-            <!-- Cat 2 -->
-            <div class="group cursor-pointer text-center">
+            </a>
+
+            <!-- Cat 3: Shoes -->
+            <a href="#shoes-section" class="group cursor-pointer text-center block">
                 <div class="overflow-hidden mb-4 relative">
                     <img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500" class="w-full h-80 object-cover group-hover:scale-110 transition duration-700">
                 </div>
                 <h4 class="uppercase font-bold tracking-widest text-sm">Shoes</h4>
-            </div>
-            <!-- Cat 3 -->
-            <div class="group cursor-pointer text-center">
-                <div class="overflow-hidden mb-4 relative">
-                    <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500" class="w-full h-80 object-cover group-hover:scale-110 transition duration-700">
-                </div>
-                <h4 class="uppercase font-bold tracking-widest text-sm">Dresses</h4>
-            </div>
-            <!-- Cat 4 -->
-            <div class="group cursor-pointer text-center">
+            </a>
+
+            <!-- Cat 4: Bangles -->
+            <a href="#bangles-section" class="group cursor-pointer text-center block">
                 <div class="overflow-hidden mb-4 relative">
                     <img src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" class="w-full h-80 object-cover group-hover:scale-110 transition duration-700">
                 </div>
                 <h4 class="uppercase font-bold tracking-widest text-sm">Bangles</h4>
-            </div>
+            </a>
         </div>
     </section>
 
-    <!-- 4. PRODUCTS WITH ADD TO CART BUTTON -->
-    <section id="products" class="py-12 bg-gray-50">
+    <!-- 4. SECTION: DRESSES (Swipeable) -->
+    <section id="dresses-section" class="py-12 bg-gray-50">
         <div class="container mx-auto px-4">
-            <h3 class="text-center text-3xl font-medium mb-10 uppercase tracking-wide">Trending Now</h3>
+            <div class="flex justify-between items-end mb-8">
+                <h3 class="text-2xl font-medium uppercase tracking-wide border-l-4 border-[#C5A982] pl-4">Women's Dresses</h3>
+                <a href="#" class="text-sm text-gray-500 underline hover:text-black">View All</a>
+            </div>
             
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <!-- Product Card 1 -->
-                <div class="bg-white group hover:shadow-xl transition duration-300">
+            <!-- Horizontal Scroll Container -->
+            <div class="flex overflow-x-auto gap-6 pb-6 scrollbar-hide">
+                
+                <!-- Product 1 -->
+                <div class="min-w-[280px] bg-white group hover:shadow-xl transition duration-300">
                     <div class="relative overflow-hidden">
-                        <a href="product.html">
-                            <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500" class="w-full h-[350px] object-cover">
-                        </a>
+                        <a href="product.html"><img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500" class="w-full h-[350px] object-cover"></a>
                         <div class="absolute top-3 left-3 bg-[#C5A982] text-white text-xs px-2 py-1 rounded-sm">-40%</div>
-                        <!-- Add to Cart Button (Visible on Hover/Mobile) -->
-                        <button class="absolute bottom-0 left-0 w-full bg-black text-white py-3 uppercase text-xs font-bold translate-y-full group-hover:translate-y-0 transition duration-300">
-                            Add to Cart
-                        </button>
+                        <button class="absolute bottom-0 left-0 w-full bg-black text-white py-3 uppercase text-xs font-bold translate-y-full group-hover:translate-y-0 transition duration-300">Add to Cart</button>
                     </div>
                     <div class="p-4 text-center">
                         <h4 class="text-sm font-medium text-gray-600 mb-1">Premium Bridal Set</h4>
@@ -107,20 +120,70 @@
                     </div>
                 </div>
 
-                <!-- Product Card 2 -->
-                <div class="bg-white group hover:shadow-xl transition duration-300">
+                <!-- Product 2 -->
+                <div class="min-w-[280px] bg-white group hover:shadow-xl transition duration-300">
                     <div class="relative overflow-hidden">
-                        <a href="product.html">
-                            <img src="https://images.unsplash.com/photo-1560343090-f0409e92791a?w=500" class="w-full h-[350px] object-cover">
-                        </a>
-                        <button class="absolute bottom-0 left-0 w-full bg-black text-white py-3 uppercase text-xs font-bold translate-y-full group-hover:translate-y-0 transition duration-300">
-                            Add to Cart
-                        </button>
+                        <a href="product.html"><img src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" class="w-full h-[350px] object-cover"></a>
+                        <button class="absolute bottom-0 left-0 w-full bg-black text-white py-3 uppercase text-xs font-bold translate-y-full group-hover:translate-y-0 transition duration-300">Add to Cart</button>
                     </div>
                     <div class="p-4 text-center">
-                        <h4 class="text-sm font-medium text-gray-600 mb-1">Men's Leather Shoes</h4>
+                        <h4 class="text-sm font-medium text-gray-600 mb-1">Party Wear Gown</h4>
                         <div class="flex justify-center gap-2 text-sm">
-                            <span class="text-[#C5A982] font-bold">Rs. 1,200</span>
+                            <span class="text-[#C5A982] font-bold">Rs. 1,800</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="min-w-[280px] bg-white group hover:shadow-xl transition duration-300">
+                    <div class="relative overflow-hidden">
+                        <a href="product.html"><img src="https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?w=500" class="w-full h-[350px] object-cover"></a>
+                        <button class="absolute bottom-0 left-0 w-full bg-black text-white py-3 uppercase text-xs font-bold translate-y-full group-hover:translate-y-0 transition duration-300">Add to Cart</button>
+                    </div>
+                    <div class="p-4 text-center">
+                        <h4 class="text-sm font-medium text-gray-600 mb-1">Velvet Suit</h4>
+                        <div class="flex justify-center gap-2 text-sm">
+                            <span class="text-[#C5A982] font-bold">Rs. 3,000</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. SECTION: JEWELRY (Swipeable) -->
+    <section id="jewelry-section" class="py-12 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-end mb-8">
+                <h3 class="text-2xl font-medium uppercase tracking-wide border-l-4 border-[#C5A982] pl-4">Jewelry Collection</h3>
+                <a href="#" class="text-sm text-gray-500 underline hover:text-black">View All</a>
+            </div>
+            
+            <div class="flex overflow-x-auto gap-6 pb-6 scrollbar-hide">
+                <!-- Product 1 -->
+                <div class="min-w-[280px] bg-white border border-gray-100 group hover:shadow-xl transition duration-300">
+                    <div class="relative overflow-hidden">
+                        <a href="product.html"><img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500" class="w-full h-[350px] object-cover"></a>
+                        <button class="absolute bottom-0 left-0 w-full bg-black text-white py-3 uppercase text-xs font-bold translate-y-full group-hover:translate-y-0 transition duration-300">Add to Cart</button>
+                    </div>
+                    <div class="p-4 text-center">
+                        <h4 class="text-sm font-medium text-gray-600 mb-1">Gold Necklace</h4>
+                        <div class="flex justify-center gap-2 text-sm">
+                            <span class="text-[#C5A982] font-bold">Rs. 1,500</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product 2 -->
+                <div class="min-w-[280px] bg-white border border-gray-100 group hover:shadow-xl transition duration-300">
+                    <div class="relative overflow-hidden">
+                        <a href="product.html"><img src="https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=500" class="w-full h-[350px] object-cover"></a>
+                        <button class="absolute bottom-0 left-0 w-full bg-black text-white py-3 uppercase text-xs font-bold translate-y-full group-hover:translate-y-0 transition duration-300">Add to Cart</button>
+                    </div>
+                    <div class="p-4 text-center">
+                        <h4 class="text-sm font-medium text-gray-600 mb-1">Diamond Ring</h4>
+                        <div class="flex justify-center gap-2 text-sm">
+                            <span class="text-[#C5A982] font-bold">Rs. 2,000</span>
                         </div>
                     </div>
                 </div>
@@ -128,11 +191,10 @@
         </div>
     </section>
 
-    <!-- 5. FOOTER (Bin Saif Style + Your Email) -->
-    <footer class="bg-black text-white pt-16 pb-8">
+    <!-- 6. FOOTER (With Your Email) -->
+    <footer class="bg-black text-white pt-16 pb-8 mt-auto">
         <div class="container mx-auto px-4">
-            
-            <!-- Subscribe Section -->
+            <!-- Subscribe -->
             <div class="max-w-2xl mx-auto text-center mb-16">
                 <h3 class="text-2xl font-bold mb-2 uppercase">Subscribe for Updates</h3>
                 <p class="text-gray-400 text-sm mb-6">Be the first to know about new rentals and offers.</p>
@@ -142,13 +204,11 @@
                 </div>
             </div>
 
-            <!-- Links Grid -->
+            <!-- Links -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 border-t border-gray-800 pt-10 text-sm">
                 <div>
                     <h4 class="font-bold mb-4 uppercase tracking-widest text-[#C5A982]">About Us</h4>
-                    <p class="text-gray-400 leading-relaxed">
-                        At Prime Business, we believe that style shouldn't cost a fortune. Rent premium fashion today.
-                    </p>
+                    <p class="text-gray-400 leading-relaxed">At Prime Business, we believe that style shouldn't cost a fortune. Rent premium fashion today.</p>
                 </div>
                 <div>
                     <h4 class="font-bold mb-4 uppercase tracking-widest text-[#C5A982]">Useful Links</h4>
@@ -156,7 +216,6 @@
                         <li><a href="#" class="hover:text-white">Home</a></li>
                         <li><a href="#" class="hover:text-white">Shop</a></li>
                         <li><a href="#" class="hover:text-white">Contact Us</a></li>
-                        <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
                     </ul>
                 </div>
                 <div>
@@ -164,7 +223,6 @@
                     <ul class="space-y-2 text-gray-400">
                         <li><i class="fab fa-whatsapp mr-2"></i> 03035958676</li>
                         <li><i class="far fa-envelope mr-2"></i> support@primebusiness.com</li>
-                        <li><i class="fas fa-map-marker-alt mr-2"></i> Karachi, Pakistan</li>
                     </ul>
                 </div>
                 <div>
@@ -172,7 +230,6 @@
                     <div class="flex gap-4 text-lg">
                         <a href="#" class="hover:text-[#C5A982]"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" class="hover:text-[#C5A982]"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="hover:text-[#C5A982]"><i class="fab fa-tiktok"></i></a>
                     </div>
                 </div>
             </div>
