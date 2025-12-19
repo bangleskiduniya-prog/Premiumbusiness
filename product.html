@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - Prime Business</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap');
+        body { font-family: 'Jost', sans-serif; }
+    </style>
+</head>
+<body class="bg-white text-gray-800">
+
+    <!-- Navbar (Simple) -->
+    <nav class="border-b py-4 px-6 flex justify-between items-center sticky top-0 bg-white z-50">
+        <a href="index.html" class="text-xl font-bold tracking-widest border-2 border-black px-2">PRIME</a>
+        <div class="flex gap-4">
+            <a href="index.html"><i class="fas fa-home text-xl"></i></a>
+            <a href="cart.html" class="relative">
+                <i class="fas fa-shopping-bag text-xl"></i>
+                <span id="cart-badge" class="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Product Section -->
+    <section class="container mx-auto px-4 py-10">
+        <!-- Breadcrumbs -->
+        <div class="text-sm text-gray-400 mb-6">
+            <a href="index.html">Home</a> / <span class="text-black">Women Clothing</span> / <span id="bread-name">Product Name</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <!-- Image Section -->
+            <div class="relative">
+                <div class="absolute top-4 left-4 bg-[#C5A982] text-white text-xs font-bold px-3 py-1 rounded-full z-10">-40%</div>
+                <img id="product-img" src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800" class="w-full rounded-lg shadow-sm" alt="Product">
+            </div>
+
+            <!-- Details Section -->
+            <div>
+                <h1 id="product-name" class="text-3xl font-medium mb-2">Premium Bridal Suit</h1>
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="text-gray-400 line-through text-lg">Rs. 5,000</span>
+                    <span id="product-price" class="text-2xl font-bold text-[#C5A982]">Rs. 2,500</span>
+                </div>
+
+                <p class="text-gray-500 text-sm leading-relaxed mb-6">
+                    This is a premium quality item available for rent. Perfect for weddings and parties. 
+                    Fabric is high quality and comfortable. Dry clean only.
+                </p>
+
+                <!-- Quantity -->
+                <div class="flex items-center gap-4 mb-6">
+                    <span class="text-sm font-bold uppercase">Quantity:</span>
+                    <div class="flex border border-gray-300 rounded">
+                        <button onclick="updateQty(-1)" class="px-3 py-1 hover:bg-gray-100">-</button>
+                        <input type="text" id="qty" value="1" class="w-10 text-center border-x border-gray-300 outline-none" readonly>
+                        <button onclick="updateQty(1)" class="px-3 py-1 hover:bg-gray-100">+</button>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex flex-col gap-3">
+                    <button onclick="addToCart()" class="w-full border-2 border-black py-3 font-bold uppercase hover:bg-black hover:text-white transition">
+                        Add to Cart
+                    </button>
+                    <button onclick="buyNow()" class="w-full bg-[#C5A982] text-white py-3 font-bold uppercase hover:bg-[#b09268] transition shadow-lg">
+                        Buy Now
+                    </button>
+                </div>
+
+                <!-- Extra Info -->
+                <div class="mt-8 border-t pt-6 space-y-3 text-sm text-gray-600">
+                    <p><i class="fas fa-truck mr-2"></i> Delivery in 2-3 days</p>
+                    <p><i class="fas fa-undo mr-2"></i> Easy Return Policy</p>
+                    <p><i class="fab fa-whatsapp mr-2"></i> Order on WhatsApp: 03035958676</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Related Products (Dummy) -->
+    <section class="bg-gray-50 py-12 mt-10">
+        <div class="container mx-auto px-4">
+            <h3 class="text-xl font-bold mb-6">Related Products</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-white p-2 shadow-sm"><img src="https://images.unsplash.com/photo-1560343090-f0409e92791a?w=300" class="w-full h-48 object-cover mb-2"><p class="text-sm font-bold">Men's Shoes</p></div>
+                <div class="bg-white p-2 shadow-sm"><img src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=300" class="w-full h-48 object-cover mb-2"><p class="text-sm font-bold">Gold Bangles</p></div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Simple Cart Logic
+        let quantity = 1;
+        
+        function updateQty(change) {
+            quantity += change;
+            if (quantity < 1) quantity = 1;
+            document.getElementById('qty').value = quantity;
+        }
+
+        function addToCart() {
+            // Abhi ke liye sirf alert, baad mein database mein jayega
+            alert("Item added to cart! (Quantity: " + quantity + ")");
+            document.getElementById('cart-badge').innerText = "1";
+        }
+
+        function buyNow() {
+            // Direct checkout page par le jayega
+            window.location.href = "checkout.html";
+        }
+    </script>
+</body>
+</html>
