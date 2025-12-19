@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - Prime Business</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap');
+        body { font-family: 'Jost', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Navbar -->
+    <nav class="bg-white border-b py-4 px-6 flex justify-between items-center sticky top-0 z-50">
+        <a href="index.html" class="text-xl font-bold tracking-widest border-2 border-black px-2">PRIME</a>
+        <button onclick="logout()" class="text-sm text-red-500 font-bold hover:underline">LOGOUT</button>
+    </nav>
+
+    <div class="container mx-auto px-4 py-10">
+        
+        <!-- Welcome Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-medium">My Account</h1>
+            <p class="text-gray-500">Welcome back, <span id="user-email" class="font-bold text-black">User</span></p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- Sidebar Menu -->
+            <div class="bg-white p-6 shadow-sm rounded-lg h-fit">
+                <ul class="space-y-4 text-gray-600">
+                    <li class="text-black font-bold border-l-4 border-[#C5A982] pl-3">Dashboard</li>
+                    <li class="hover:text-black cursor-pointer pl-4">My Orders</li>
+                    <li class="hover:text-black cursor-pointer pl-4">Addresses</li>
+                    <li class="hover:text-black cursor-pointer pl-4">Account Details</li>
+                    <li onclick="logout()" class="hover:text-red-500 cursor-pointer pl-4">Logout</li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="md:col-span-2 space-y-6">
+                
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div class="bg-white p-6 rounded-lg shadow-sm text-center border-b-4 border-blue-500">
+                        <h3 class="text-2xl font-bold">0</h3>
+                        <p class="text-xs text-gray-500 uppercase">Total Orders</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm text-center border-b-4 border-yellow-500">
+                        <h3 class="text-2xl font-bold">0</h3>
+                        <p class="text-xs text-gray-500 uppercase">Pending</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm text-center border-b-4 border-green-500">
+                        <h3 class="text-2xl font-bold">0</h3>
+                        <p class="text-xs text-gray-500 uppercase">Completed</p>
+                    </div>
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="text-lg font-bold mb-4">Recent Orders</h3>
+                    <div class="text-center py-10 text-gray-400">
+                        <i class="fas fa-shopping-bag text-4xl mb-3 opacity-20"></i>
+                        <p>No orders placed yet.</p>
+                        <a href="index.html" class="text-[#C5A982] underline text-sm mt-2 block">Go Shopping</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Logic -->
+    <script type="module">
+        import { auth } from './config.js';
+        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+
+        // Check Login Status
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('user-email').innerText = user.email.split('@')[0];
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        // Logout Function
+        window.logout = async () => {
+            await signOut(auth);
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+</html>
