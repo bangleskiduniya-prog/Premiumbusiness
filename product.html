@@ -30,54 +30,14 @@
     <!-- Product Section -->
     <section class="container mx-auto px-4 py-10">
         <div class="text-sm text-gray-400 mb-6">
-            <a href="index.html">Home</a> / <span class="text-black">Women Clothing</span> / <span>Premium Bridal Suit</span>
+            <a href="index.html">Home</a> / <span id="bread-cat" class="text-black">...</span> / <span id="bread-name">...</span>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-            <!-- Image -->
-            <div class="relative">
-                <div class="absolute top-4 left-4 bg-[#C5A982] text-white text-xs font-bold px-3 py-1 rounded-full z-10">-40%</div>
-                <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800" class="w-full rounded-lg shadow-sm">
-            </div>
-
-            <!-- Details -->
-            <div>
-                <h1 class="text-3xl font-medium mb-2" id="p-name">Premium Bridal Suit</h1>
-                <div class="flex items-center gap-3 mb-4">
-                    <span class="text-gray-400 line-through text-lg">Rs. 5,000</span>
-                    <span id="display-price" class="text-2xl font-bold text-[#C5A982]">Rs. 2,500</span>
-                </div>
-
-                <p class="text-gray-500 text-sm leading-relaxed mb-6">
-                    This is a premium quality item available for rent. Perfect for weddings and parties. 
-                    Fabric is high quality and comfortable. Dry clean only.
-                </p>
-
-                <!-- Quantity -->
-                <div class="flex items-center gap-4 mb-6">
-                    <span class="text-sm font-bold uppercase">Quantity:</span>
-                    <div class="flex border border-gray-300 rounded">
-                        <button onclick="updateQty(-1)" class="px-3 py-1 hover:bg-gray-100">-</button>
-                        <input type="text" id="qty" value="1" class="w-10 text-center border-x border-gray-300 outline-none" readonly>
-                        <button onclick="updateQty(1)" class="px-3 py-1 hover:bg-gray-100">+</button>
-                    </div>
-                </div>
-
-                <!-- Buttons -->
-                <div class="flex flex-col gap-3">
-                    <button onclick="addToCart()" class="w-full border-2 border-black py-3 font-bold uppercase hover:bg-black hover:text-white transition">
-                        Add to Cart
-                    </button>
-                    <button onclick="buyNow()" class="w-full bg-[#C5A982] text-white py-3 font-bold uppercase hover:bg-[#b09268] transition shadow-lg text-center">
-                        Buy Now
-                    </button>
-                </div>
-
-                <div class="mt-8 border-t pt-6 space-y-3 text-sm text-gray-600">
-                    <p><i class="fas fa-truck mr-2"></i> Delivery in 2-3 days</p>
-                    <p><i class="fas fa-undo mr-2"></i> Easy Return Policy</p>
-                    <p><i class="fab fa-whatsapp mr-2"></i> Order on WhatsApp: 03035958676</p>
-                </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10" id="product-content">
+            <!-- Loading State -->
+            <div class="col-span-2 text-center py-20">
+                <i class="fas fa-spinner fa-spin text-4xl text-[#C5A982]"></i>
+                <p class="mt-4 text-gray-500">Loading Product...</p>
             </div>
         </div>
     </section>
@@ -85,53 +45,111 @@
     <!-- Footer -->
     <footer class="bg-black text-white pt-12 pb-8 mt-10">
         <div class="container mx-auto px-4">
-            <div class="mb-12 text-center">
-                <h3 class="text-[#C5A982] text-xl font-bold mb-2">About Us</h3>
-                <p class="text-gray-400 text-sm mb-6">At Prime Business, we believe that fabric is more than just material – it's an expression of style.</p>
-                <div class="flex flex-col md:flex-row gap-2 justify-center max-w-md mx-auto">
-                    <input type="email" placeholder="Enter Your Email Address" class="w-full p-3 text-black outline-none bg-white">
-                    <button class="gold-btn px-6 py-3 font-bold uppercase tracking-widest text-sm">SUBSCRIBE</button>
-                </div>
-            </div>
             <div class="border-t border-gray-800 pt-6 text-center text-xs text-gray-500">
                 &copy; 2025 Prime Business. All rights reserved.
             </div>
         </div>
     </footer>
 
-    <script>
-        let basePrice = 2500; 
+    <!-- LOGIC -->
+    <script type="module">
+        import { db } from './config.js';
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-        function updateQty(change) {
+        let currentProduct = null;
+        let basePrice = 0;
+
+        async function loadProduct() {
+            // Get ID from URL
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+
+            if(!id) {
+                document.getElementById('product-content').innerHTML = '<p class="text-center col-span-2">Product not found.</p>';
+                return;
+            }
+
+            const docSnap = await getDoc(doc(db, "products", id));
+            
+            if (docSnap.exists()) {
+                currentProduct = docSnap.data();
+                basePrice = currentProduct.price;
+                renderProduct(currentProduct);
+            } else {
+                document.getElementById('product-content').innerHTML = '<p class="text-center col-span-2">Product does not exist.</p>';
+            }
+        }
+
+        function renderProduct(p) {
+            document.getElementById('bread-cat').innerText = p.category;
+            document.getElementById('bread-name').innerText = p.name;
+
+            // Generate Images HTML
+            let mainImg = p.images[0];
+            let thumbnails = p.images.map(img => `<img src="${img}" onclick="changeImg('${img}')" class="w-16 h-16 object-cover rounded cursor-pointer border hover:border-black">`).join('');
+
+            const html = `
+                <div class="relative">
+                    <img id="main-img" src="${mainImg}" class="w-full rounded-lg shadow-sm mb-4">
+                    <div class="flex gap-2">${thumbnails}</div>
+                </div>
+
+                <div>
+                    <h1 class="text-3xl font-medium mb-2">${p.name}</h1>
+                    <div class="flex items-center gap-3 mb-4">
+                        ${p.salePrice ? `<span class="text-gray-400 line-through text-lg">Rs. ${p.salePrice}</span>` : ''}
+                        <span id="display-price" class="text-2xl font-bold text-[#C5A982]">Rs. ${p.price}</span>
+                    </div>
+
+                    <p class="text-gray-500 text-sm leading-relaxed mb-6">${p.description}</p>
+                    
+                    <div class="mb-4 text-sm">
+                        <p><strong>Colors:</strong> ${p.colors}</p>
+                        <p><strong>Sizes:</strong> ${p.sizes}</p>
+                    </div>
+
+                    <div class="flex items-center gap-4 mb-6">
+                        <span class="text-sm font-bold uppercase">Quantity:</span>
+                        <div class="flex border border-gray-300 rounded">
+                            <button onclick="updateQty(-1)" class="px-3 py-1 hover:bg-gray-100">-</button>
+                            <input type="text" id="qty" value="1" class="w-10 text-center border-x border-gray-300 outline-none" readonly>
+                            <button onclick="updateQty(1)" class="px-3 py-1 hover:bg-gray-100">+</button>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-3">
+                        <button onclick="addToCart()" class="w-full border-2 border-black py-3 font-bold uppercase hover:bg-black hover:text-white transition">Add to Cart</button>
+                        <button onclick="buyNow()" class="w-full bg-[#C5A982] text-white py-3 font-bold uppercase hover:bg-[#b09268] transition shadow-lg text-center">Buy Now</button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('product-content').innerHTML = html;
+        }
+
+        // Global Functions for Buttons
+        window.changeImg = (src) => { document.getElementById('main-img').src = src; }
+        
+        window.updateQty = (change) => {
             let qtyInput = document.getElementById('qty');
             let newQty = parseInt(qtyInput.value) + change;
             if (newQty < 1) newQty = 1;
             qtyInput.value = newQty;
-            
             let newPrice = basePrice * newQty;
             document.getElementById('display-price').innerText = "Rs. " + newPrice.toLocaleString();
         }
 
-        function addToCart() {
-            alert("Item added to cart!");
-        }
-
-        function buyNow() {
+        window.buyNow = () => {
             const qty = parseInt(document.getElementById('qty').value);
             const total = basePrice * qty;
-            
-            // Save Order Data to LocalStorage
-            const orderData = {
-                name: "Premium Bridal Suit",
-                price: basePrice,
-                qty: qty,
-                total: total
-            };
+            const orderData = { name: currentProduct.name, price: basePrice, qty: qty, total: total };
             localStorage.setItem('checkoutOrder', JSON.stringify(orderData));
-            
-            // Go to Checkout
             window.location.href = "checkout.html";
         }
+
+        window.addToCart = () => { alert("Added to Cart!"); }
+
+        // Init
+        loadProduct();
     </script>
 </body>
 </html>
