@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Prime Business</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap');
+        body { font-family: 'Jost', sans-serif; background: #f3f4f6; }
+        .loader { border: 3px solid #f3f3f3; border-top: 3px solid #3498db; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: none; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <!-- 1. LOGIN SCREEN -->
+    <div id="login-screen" class="fixed inset-0 bg-gray-900 flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-96">
+            <h2 class="text-2xl font-bold mb-4 text-center">Admin Login</h2>
+            <input type="password" id="admin-pass" placeholder="Enter Password" class="w-full border p-3 rounded mb-4 outline-none">
+            <button onclick="checkLogin()" class="w-full bg-black text-white py-3 rounded font-bold hover:bg-gray-800">Login</button>
+            <p id="login-error" class="text-red-500 text-sm text-center mt-2 hidden">Incorrect Password!</p>
+        </div>
+    </div>
+
+    <!-- 2. DASHBOARD -->
+    <div id="dashboard" class="hidden min-h-screen flex">
+        
+        <!-- Sidebar -->
+        <aside class="w-64 bg-black text-white flex flex-col fixed h-full z-10">
+            <div class="p-6 text-2xl font-bold tracking-widest border-b border-gray-800">PRIME<span class="text-[#C5A982]">ADMIN</span></div>
+            <nav class="flex-1 p-4 space-y-2">
+                <button onclick="showTab('orders')" class="w-full text-left p-3 hover:bg-gray-800 rounded flex items-center gap-3"><i class="fas fa-shopping-cart"></i> Orders</button>
+                <button onclick="showTab('slider')" class="w-full text-left p-3 hover:bg-gray-800 rounded flex items-center gap-3"><i class="fas fa-images"></i> Hero Slider</button>
+                <button onclick="showTab('categories')" class="w-full text-left p-3 hover:bg-gray-800 rounded flex items-center gap-3"><i class="fas fa-th-large"></i> Categories</button>
+                <button onclick="showTab('products')" class="w-full text-left p-3 hover:bg-gray-800 rounded flex items-center gap-3"><i class="fas fa-tshirt"></i> Products</button>
+                <button onclick="showTab('settings')" class="w-full text-left p-3 hover:bg-gray-800 rounded flex items-center gap-3"><i class="fas fa-cog"></i> Settings</button>
+            </nav>
+            <button onclick="location.reload()" class="p-4 bg-red-600 hover:bg-red-700 text-center font-bold">Logout</button>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="ml-64 flex-1 p-8">
+            
+            <!-- TAB: ORDERS -->
+            <div id="tab-orders" class="tab-content">
+                <h2 class="text-3xl font-bold mb-6">Recent Orders</h2>
+                <div id="orders-list" class="space-y-4"><p>Loading orders...</p></div>
+            </div>
+
+            <!-- TAB: HERO SLIDER -->
+            <div id="tab-slider" class="tab-content hidden">
+                <h2 class="text-3xl font-bold mb-6">Manage Hero Slider</h2>
+                <div class="bg-white p-6 rounded shadow mb-6">
+                    <h3 class="font-bold mb-4">Add New Slide</h3>
+                    <input type="file" id="slider-img" class="mb-4 block w-full text-sm">
+                    <button onclick="uploadSlider()" class="bg-black text-white px-6 py-2 rounded flex items-center gap-2">
+                        <span>Upload Slide</span> <div id="slider-loader" class="loader"></div>
+                    </button>
+                </div>
+                <div id="slider-gallery" class="grid grid-cols-3 gap-4"></div>
+            </div>
+
+            <!-- TAB: CATEGORIES -->
+            <div id="tab-categories" class="tab-content hidden">
+                <h2 class="text-3xl font-bold mb-6">Manage Categories</h2>
+                <div class="bg-white p-6 rounded shadow mb-6 flex gap-4 items-end">
+                    <div class="flex-1"><label class="block text-sm font-bold mb-1">Name</label><input type="text" id="cat-name" class="w-full border p-2 rounded"></div>
+                    <div class="flex-1"><label class="block text-sm font-bold mb-1">Image</label><input type="file" id="cat-img" class="w-full text-sm"></div>
+                    <button onclick="addCategory()" class="bg-black text-white px-6 py-2 rounded h-10 flex items-center gap-2">Add <div id="cat-loader" class="loader"></div></button>
+                </div>
+                <div id="categories-list" class="grid grid-cols-4 gap-4"></div>
+            </div>
+
+            <!-- TAB: PRODUCTS -->
+            <div id="tab-products" class="tab-content hidden">
+                <h2 class="text-3xl font-bold mb-6">Manage Products</h2>
+                <div class="bg-white p-6 rounded shadow mb-8">
+                    <h3 class="font-bold text-xl mb-4">Add New Product</h3>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <input type="text" id="prod-name" placeholder="Product Name" class="border p-2 rounded">
+                        <select id="prod-cat" class="border p-2 rounded"><option>Select Category</option></select>
+                        <input type="number" id="prod-price" placeholder="Price (Rs)" class="border p-2 rounded">
+                        <input type="number" id="prod-sale" placeholder="Sale Price (Optional)" class="border p-2 rounded">
+                        <input type="text" id="prod-colors" placeholder="Colors (e.g. Red, Blue)" class="border p-2 rounded">
+                        <input type="text" id="prod-sizes" placeholder="Sizes (e.g. S, M, L)" class="border p-2 rounded">
+                    </div>
+                    <textarea id="prod-desc" placeholder="Description" class="w-full border p-2 rounded mb-4"></textarea>
+                    
+                    <div class="mb-4">
+                        <label class="block font-bold mb-2">Product Gallery (Max 3 Images)</label>
+                        <input type="file" id="prod-imgs" multiple accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        <p class="text-xs text-red-500 mt-1">* You can select up to 3 images only.</p>
+                    </div>
+
+                    <button onclick="addProduct()" class="w-full bg-[#C5A982] text-white py-3 rounded font-bold flex justify-center items-center gap-2">
+                        Upload Product <div id="prod-loader" class="loader"></div>
+                    </button>
+                </div>
+                <div id="products-list" class="grid grid-cols-1 gap-4"></div>
+            </div>
+
+            <!-- TAB: SETTINGS -->
+            <div id="tab-settings" class="tab-content hidden">
+                <h2 class="text-3xl font-bold mb-6">Site Settings</h2>
+                <div class="bg-white p-6 rounded shadow space-y-4 max-w-xl">
+                    <div><label class="block font-bold mb-1">WhatsApp Number (e.g. 923001234567)</label><input type="text" id="set-phone" class="w-full border p-2 rounded"></div>
+                    <div><label class="block font-bold mb-1">Email Address</label><input type="text" id="set-email" class="w-full border p-2 rounded"></div>
+                    <div><label class="block font-bold mb-1">Footer About Text</label><textarea id="set-about" class="w-full border p-2 rounded"></textarea></div>
+                    <div><label class="block font-bold mb-1">Facebook Link</label><input type="text" id="set-fb" class="w-full border p-2 rounded"></div>
+                    <div><label class="block font-bold mb-1">Instagram Link</label><input type="text" id="set-insta" class="w-full border p-2 rounded"></div>
+                    <button onclick="saveSettings()" class="bg-black text-white px-6 py-2 rounded">Save Settings</button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- LOGIC -->
+    <script type="module">
+        import { db, CLOUDINARY_CLOUD_NAME, CLOUDINARY_PRESET } from './config.js';
+        import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, setDoc, orderBy, query } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+        // LOGIN
+        window.checkLogin = () => {
+            if(document.getElementById('admin-pass').value === "admin0012") {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                loadAllData();
+            } else {
+                document.getElementById('login-error').classList.remove('hidden');
+            }
+        }
+
+        window.showTab = (tabName) => {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + tabName).classList.remove('hidden');
+        }
+
+        // UPLOAD IMAGE
+        async function uploadImage(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', CLOUDINARY_PRESET);
+            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, { method: 'POST', body: formData });
+            const data = await res.json();
+            return data.secure_url;
+        }
+
+        // SLIDER
+        window.uploadSlider = async () => {
+            const file = document.getElementById('slider-img').files[0];
+            if(!file) return alert("Select image!");
+            document.getElementById('slider-loader').style.display = 'block';
+            const url = await uploadImage(file);
+            await addDoc(collection(db, "hero_slider"), { image: url, timestamp: new Date() });
+            document.getElementById('slider-loader').style.display = 'none';
+            loadSlider();
+        }
+        async function loadSlider() {
+            const container = document.getElementById('slider-gallery');
+            container.innerHTML = '';
+            const snap = await getDocs(query(collection(db, "hero_slider"), orderBy("timestamp", "desc")));
+            snap.forEach(d => {
+                container.innerHTML += `<div class="relative group"><img src="${d.data().image}" class="w-full h-32 object-cover rounded"><button onclick="deleteItem('hero_slider', '${d.id}')" class="absolute top-1 right-1 bg-red-500 text-white p-1 rounded text-xs">Delete</button></div>`;
+            });
+        }
+
+        // CATEGORIES
+        window.addCategory = async () => {
+            const name = document.getElementById('cat-name').value;
+            const file = document.getElementById('cat-img').files[0];
+            if(!name || !file) return alert("Fill all fields");
+            document.getElementById('cat-loader').style.display = 'block';
+            const url = await uploadImage(file);
+            await addDoc(collection(db, "categories"), { name, image: url, timestamp: new Date() });
+            document.getElementById('cat-loader').style.display = 'none';
+            loadCategories();
+        }
+        async function loadCategories() {
+            const list = document.getElementById('categories-list');
+            const select = document.getElementById('prod-cat');
+            list.innerHTML = '';
+            select.innerHTML = '<option>Select Category</option>';
+            const snap = await getDocs(query(collection(db, "categories"), orderBy("timestamp", "desc")));
+            snap.forEach(d => {
+                const data = d.data();
+                list.innerHTML += `<div class="bg-white p-4 rounded shadow text-center relative"><img src="${data.image}" class="w-full h-24 object-cover mb-2 rounded"><h4 class="font-bold">${data.name}</h4><button onclick="deleteItem('categories', '${d.id}')" class="text-red-500 text-xs mt-2">Delete</button></div>`;
+                select.innerHTML += `<option value="${data.name}">${data.name}</option>`;
+            });
+        }
+
+        // PRODUCTS (WITH LIMIT CHECK)
+        window.addProduct = async () => {
+            const name = document.getElementById('prod-name').value;
+            const cat = document.getElementById('prod-cat').value;
+            const price = document.getElementById('prod-price').value;
+            const files = document.getElementById('prod-imgs').files;
+            
+            if(!name || !price || files.length === 0) return alert("Fill required fields");
+            
+            // --- LIMIT CHECK ---
+            if(files.length > 3) {
+                return alert("Error: You can only upload a maximum of 3 images per product.");
+            }
+
+            document.getElementById('prod-loader').style.display = 'block';
+            let imageUrls = [];
+            for(let i=0; i<files.length; i++) {
+                const url = await uploadImage(files[i]);
+                imageUrls.push(url);
+            }
+
+            await addDoc(collection(db, "products"), {
+                name, category: cat, price: Number(price),
+                salePrice: document.getElementById('prod-sale').value,
+                colors: document.getElementById('prod-colors').value,
+                sizes: document.getElementById('prod-sizes').value,
+                description: document.getElementById('prod-desc').value,
+                images: imageUrls,
+                timestamp: new Date()
+            });
+
+            document.getElementById('prod-loader').style.display = 'none';
+            alert("Product Uploaded!");
+            loadProducts();
+        }
+        async function loadProducts() {
+            const list = document.getElementById('products-list');
+            list.innerHTML = '';
+            const snap = await getDocs(query(collection(db, "products"), orderBy("timestamp", "desc")));
+            snap.forEach(d => {
+                const p = d.data();
+                list.innerHTML += `<div class="bg-white p-4 rounded shadow flex gap-4 items-center"><img src="${p.images[0]}" class="w-16 h-16 object-cover rounded"><div class="flex-1"><h4 class="font-bold">${p.name}</h4><p class="text-sm text-gray-500">${p.category} - Rs. ${p.price}</p></div><button onclick="deleteItem('products', '${d.id}')" class="bg-red-100 text-red-600 px-3 py-1 rounded">Delete</button></div>`;
+            });
+        }
+
+        // SETTINGS
+        window.saveSettings = async () => {
+            const settings = {
+                phone: document.getElementById('set-phone').value,
+                email: document.getElementById('set-email').value,
+                about: document.getElementById('set-about').value,
+                fb: document.getElementById('set-fb').value,
+                insta: document.getElementById('set-insta').value
+            };
+            await setDoc(doc(db, "settings", "general"), settings);
+            alert("Settings Saved!");
+        }
+
+        // ORDERS
+        async function loadOrders() {
+            const list = document.getElementById('orders-list');
+            list.innerHTML = '';
+            const snap = await getDocs(query(collection(db, "orders"), orderBy("date", "desc")));
+            snap.forEach(d => {
+                const o = d.data();
+                list.innerHTML += `<div class="bg-white p-4 rounded shadow border-l-4 border-black"><div class="flex justify-between font-bold"><span>${o.customer.name}</span><span>Rs. ${o.total}</span></div><p class="text-sm text-gray-500">${o.items}</p><p class="text-xs text-gray-400 mt-1">${o.method} - ${o.customer.phone}</p></div>`;
+            });
+        }
+
+        window.deleteItem = async (col, id) => {
+            if(confirm("Delete this item?")) { await deleteDoc(doc(db, col, id)); loadAllData(); }
+        }
+        function loadAllData() { loadSlider(); loadCategories(); loadProducts(); loadOrders(); }
+    </script>
+</body>
+</html>
