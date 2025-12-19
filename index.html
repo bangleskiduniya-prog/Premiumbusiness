@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prime Business - Premium Rental Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap');
+        body { font-family: 'Jost', sans-serif; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-white text-gray-800">
+
+    <!-- 1. HEADER (Bin Saif Style) -->
+    <nav class="sticky top-0 z-50 bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <!-- Left: Menu & Search -->
+            <div class="flex items-center gap-4">
+                <button class="text-2xl"><i class="fas fa-bars"></i></button>
+                <button class="text-xl hidden md:block"><i class="fas fa-search"></i></button>
+            </div>
+
+            <!-- Center: Logo -->
+            <div class="text-2xl font-bold tracking-widest uppercase border-2 border-black px-2 py-1">
+                Prime<span class="font-light">Business</span>
+            </div>
+
+            <!-- Right: Cart & Account -->
+            <div class="flex items-center gap-5">
+                <a href="login.html" class="text-xl"><i class="far fa-user"></i></a>
+                <a href="cart.html" class="relative text-xl">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span id="cart-count" class="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">0</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 2. HERO SLIDER (Dummy Data) -->
+    <header class="relative w-full h-[500px] overflow-hidden bg-gray-100">
+        <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover opacity-90" alt="Hero">
+        <div class="absolute inset-0 flex flex-col justify-center items-center text-white bg-black bg-opacity-20">
+            <h2 class="text-4xl md:text-6xl font-light mb-4">New Collection</h2>
+            <a href="#products" class="bg-white text-black px-8 py-3 uppercase tracking-widest text-sm hover:bg-black hover:text-white transition">Shop Now</a>
+        </div>
+    </header>
+
+    <!-- 3. SHOP BY CATEGORY -->
+    <section class="py-12 container mx-auto px-4">
+        <h3 class="text-center text-2xl font-medium mb-8 uppercase tracking-wide">Shop By Categories</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <!-- Category 1 -->
+            <div class="group cursor-pointer text-center">
+                <div class="overflow-hidden mb-3">
+                    <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500" class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">
+                </div>
+                <h4 class="uppercase font-medium group-hover:text-gray-500">Jewelry</h4>
+            </div>
+            <!-- Category 2 -->
+            <div class="group cursor-pointer text-center">
+                <div class="overflow-hidden mb-3">
+                    <img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500" class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">
+                </div>
+                <h4 class="uppercase font-medium group-hover:text-gray-500">Shoes</h4>
+            </div>
+            <!-- Category 3 -->
+            <div class="group cursor-pointer text-center">
+                <div class="overflow-hidden mb-3">
+                    <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500" class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">
+                </div>
+                <h4 class="uppercase font-medium group-hover:text-gray-500">Dresses</h4>
+            </div>
+            <!-- Category 4 -->
+            <div class="group cursor-pointer text-center">
+                <div class="overflow-hidden mb-3">
+                    <img src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">
+                </div>
+                <h4 class="uppercase font-medium group-hover:text-gray-500">Bangles</h4>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. FEATURED PRODUCTS (Dummy Data for Now) -->
+    <section id="products" class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h3 class="text-center text-2xl font-medium mb-8 uppercase tracking-wide">Trending Now</h3>
+            
+            <div id="product-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Products will be loaded here from Firebase later -->
+                <!-- Dummy Product 1 -->
+                <div class="bg-white p-2 shadow-sm hover:shadow-lg transition group">
+                    <div class="relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500" class="w-full h-80 object-cover">
+                        <div class="absolute bottom-0 left-0 w-full bg-white bg-opacity-90 p-2 translate-y-full group-hover:translate-y-0 transition duration-300 flex justify-center">
+                            <button class="bg-black text-white px-4 py-2 text-xs uppercase w-full">Add to Cart</button>
+                        </div>
+                        <div class="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">-40%</div>
+                    </div>
+                    <div class="p-3 text-center">
+                        <h4 class="text-sm font-medium text-gray-600 truncate">Premium Bridal Set</h4>
+                        <div class="mt-1">
+                            <span class="text-gray-400 line-through text-xs">Rs. 5,000</span>
+                            <span class="text-black font-bold ml-2">Rs. 2,500</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dummy Product 2 -->
+                <div class="bg-white p-2 shadow-sm hover:shadow-lg transition group">
+                    <div class="relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1560343090-f0409e92791a?w=500" class="w-full h-80 object-cover">
+                        <div class="absolute bottom-0 left-0 w-full bg-white bg-opacity-90 p-2 translate-y-full group-hover:translate-y-0 transition duration-300 flex justify-center">
+                            <button class="bg-black text-white px-4 py-2 text-xs uppercase w-full">Add to Cart</button>
+                        </div>
+                    </div>
+                    <div class="p-3 text-center">
+                        <h4 class="text-sm font-medium text-gray-600 truncate">Leather Formal Shoes</h4>
+                        <div class="mt-1">
+                            <span class="text-black font-bold">Rs. 1,200</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. FOOTER -->
+    <footer class="bg-black text-white pt-12 pb-6">
+        <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+            <div>
+                <h4 class="text-lg font-bold mb-4">Prime Business</h4>
+                <p class="text-gray-400 text-sm">Premium rental services for all your needs. Quality you can trust.</p>
+            </div>
+            <div>
+                <h4 class="text-lg font-bold mb-4">Quick Links</h4>
+                <ul class="text-gray-400 text-sm space-y-2">
+                    <li><a href="#" class="hover:text-white">Home</a></li>
+                    <li><a href="#" class="hover:text-white">Shop</a></li>
+                    <li><a href="#" class="hover:text-white">About Us</a></li>
+                    <li><a href="#" class="hover:text-white">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-bold mb-4">Contact Us</h4>
+                <p class="text-gray-400 text-sm mb-2"><i class="fab fa-whatsapp mr-2"></i> 03035958676</p>
+                <p class="text-gray-400 text-sm"><i class="far fa-envelope mr-2"></i> support@primebusiness.com</p>
+                <div class="mt-4 space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="text-center text-gray-600 text-xs mt-10 border-t border-gray-800 pt-6">
+            &copy; 2025 Prime Business. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Logic Script -->
+    <script type="module">
+        import { db } from './config.js';
+        import { collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+        // Future: Load products from Firebase here
+        console.log("Website Loaded");
+    </script>
+</body>
+</html>
