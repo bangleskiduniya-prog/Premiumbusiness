@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap');
-        body { font-family: 'Jost', sans-serif; padding-bottom: 70px; } /* Space for bottom nav */
+        body { font-family: 'Jost', sans-serif; padding-bottom: 80px; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .gold-btn { background-color: #C5A982; color: white; }
         .gold-text { color: #C5A982; }
@@ -37,17 +37,17 @@
         <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070" class="w-full h-full object-cover opacity-90">
         <div class="absolute inset-0 flex flex-col justify-center items-center text-white bg-black bg-opacity-30">
             <h2 class="text-5xl font-light mb-6 tracking-wider text-center">New Collection</h2>
-            <a href="#dresses-section" class="bg-white text-black px-10 py-3 uppercase tracking-widest text-sm hover:bg-black hover:text-white transition">Shop Now</a>
+            <a href="#suits-section" class="bg-white text-black px-10 py-3 uppercase tracking-widest text-sm hover:bg-black hover:text-white transition">Shop Now</a>
         </div>
     </header>
 
-    <!-- 3. SHOP BY CATEGORY (Clickable) -->
+    <!-- 3. SHOP BY CATEGORY (Top Grid) -->
     <section class="py-12 container mx-auto px-4">
         <h3 class="text-center text-2xl font-medium mb-8 uppercase tracking-wide">Shop By Categories</h3>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <a href="#dresses-section" class="group cursor-pointer text-center block">
+            <a href="#suits-section" class="group cursor-pointer text-center block">
                 <div class="overflow-hidden mb-3 rounded-lg"><img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500" class="w-full h-40 object-cover group-hover:scale-110 transition duration-500"></div>
-                <h4 class="uppercase font-bold text-xs tracking-widest">Dresses</h4>
+                <h4 class="uppercase font-bold text-xs tracking-widest">Suits</h4>
             </a>
             <a href="#jewelry-section" class="group cursor-pointer text-center block">
                 <div class="overflow-hidden mb-3 rounded-lg"><img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500" class="w-full h-40 object-cover group-hover:scale-110 transition duration-500"></div>
@@ -57,22 +57,23 @@
                 <div class="overflow-hidden mb-3 rounded-lg"><img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500" class="w-full h-40 object-cover group-hover:scale-110 transition duration-500"></div>
                 <h4 class="uppercase font-bold text-xs tracking-widest">Shoes</h4>
             </a>
-            <a href="#" class="group cursor-pointer text-center block">
+            <a href="#bangles-section" class="group cursor-pointer text-center block">
                 <div class="overflow-hidden mb-3 rounded-lg"><img src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" class="w-full h-40 object-cover group-hover:scale-110 transition duration-500"></div>
                 <h4 class="uppercase font-bold text-xs tracking-widest">Bangles</h4>
             </a>
         </div>
     </section>
 
-    <!-- 4. SECTIONS (Swipeable) -->
-    <section id="dresses-section" class="py-10 bg-gray-50">
+    <!-- 4. SECTION 1: SUITS (Horizontal Slider) -->
+    <section id="suits-section" class="py-10 bg-gray-50">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-end mb-6">
-                <h3 class="text-xl font-bold uppercase tracking-wide border-l-4 border-[#C5A982] pl-3">Women's Dresses</h3>
+                <h3 class="text-xl font-bold uppercase tracking-wide border-l-4 border-[#C5A982] pl-3">Ladies Suits</h3>
                 <a href="#" class="text-xs text-gray-500 underline">View All</a>
             </div>
             <div class="flex overflow-x-auto gap-4 pb-4 scrollbar-hide">
-                <div class="min-w-[200px] bg-white shadow-sm rounded-lg overflow-hidden group">
+                <!-- Product 1 -->
+                <div class="min-w-[220px] bg-white shadow-sm rounded-lg overflow-hidden group">
                     <div class="relative">
                         <a href="product.html"><img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500" class="w-full h-64 object-cover"></a>
                         <button class="absolute bottom-0 w-full bg-black text-white text-xs py-2 uppercase font-bold translate-y-full group-hover:translate-y-0 transition">Add to Cart</button>
@@ -82,7 +83,8 @@
                         <p class="text-[#C5A982] font-bold text-sm">Rs. 5,000</p>
                     </div>
                 </div>
-                <div class="min-w-[200px] bg-white shadow-sm rounded-lg overflow-hidden group">
+                <!-- Product 2 -->
+                <div class="min-w-[220px] bg-white shadow-sm rounded-lg overflow-hidden group">
                     <div class="relative">
                         <a href="product.html"><img src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" class="w-full h-64 object-cover"></a>
                         <button class="absolute bottom-0 w-full bg-black text-white text-xs py-2 uppercase font-bold translate-y-full group-hover:translate-y-0 transition">Add to Cart</button>
@@ -96,25 +98,104 @@
         </div>
     </section>
 
-    <!-- 5. FOOTER (Exact Screenshot Match) -->
+    <!-- 5. SECTION 2: JEWELRY (Horizontal Slider) -->
+    <section id="jewelry-section" class="py-10 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-end mb-6">
+                <h3 class="text-xl font-bold uppercase tracking-wide border-l-4 border-[#C5A982] pl-3">Jewelry Collection</h3>
+                <a href="#" class="text-xs text-gray-500 underline">View All</a>
+            </div>
+            <div class="flex overflow-x-auto gap-4 pb-4 scrollbar-hide">
+                <div class="min-w-[220px] bg-white border border-gray-100 rounded-lg overflow-hidden group">
+                    <div class="relative">
+                        <a href="product.html"><img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500" class="w-full h-64 object-cover"></a>
+                        <button class="absolute bottom-0 w-full bg-black text-white text-xs py-2 uppercase font-bold translate-y-full group-hover:translate-y-0 transition">Add to Cart</button>
+                    </div>
+                    <div class="p-3">
+                        <h4 class="text-sm font-medium truncate">Gold Necklace</h4>
+                        <p class="text-[#C5A982] font-bold text-sm">Rs. 1,500</p>
+                    </div>
+                </div>
+                <div class="min-w-[220px] bg-white border border-gray-100 rounded-lg overflow-hidden group">
+                    <div class="relative">
+                        <a href="product.html"><img src="https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=500" class="w-full h-64 object-cover"></a>
+                        <button class="absolute bottom-0 w-full bg-black text-white text-xs py-2 uppercase font-bold translate-y-full group-hover:translate-y-0 transition">Add to Cart</button>
+                    </div>
+                    <div class="p-3">
+                        <h4 class="text-sm font-medium truncate">Diamond Ring</h4>
+                        <p class="text-[#C5A982] font-bold text-sm">Rs. 2,000</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. SECTION 3: SHOES (Horizontal Slider) -->
+    <section id="shoes-section" class="py-10 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-end mb-6">
+                <h3 class="text-xl font-bold uppercase tracking-wide border-l-4 border-[#C5A982] pl-3">Shoes Collection</h3>
+                <a href="#" class="text-xs text-gray-500 underline">View All</a>
+            </div>
+            <div class="flex overflow-x-auto gap-4 pb-4 scrollbar-hide">
+                <div class="min-w-[220px] bg-white shadow-sm rounded-lg overflow-hidden group">
+                    <div class="relative">
+                        <a href="product.html"><img src="https://images.unsplash.com/photo-1560343090-f0409e92791a?w=500" class="w-full h-64 object-cover"></a>
+                        <button class="absolute bottom-0 w-full bg-black text-white text-xs py-2 uppercase font-bold translate-y-full group-hover:translate-y-0 transition">Add to Cart</button>
+                    </div>
+                    <div class="p-3">
+                        <h4 class="text-sm font-medium truncate">Men's Leather Shoes</h4>
+                        <p class="text-[#C5A982] font-bold text-sm">Rs. 1,200</p>
+                    </div>
+                </div>
+                <div class="min-w-[220px] bg-white shadow-sm rounded-lg overflow-hidden group">
+                    <div class="relative">
+                        <a href="product.html"><img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500" class="w-full h-64 object-cover"></a>
+                        <button class="absolute bottom-0 w-full bg-black text-white text-xs py-2 uppercase font-bold translate-y-full group-hover:translate-y-0 transition">Add to Cart</button>
+                    </div>
+                    <div class="p-3">
+                        <h4 class="text-sm font-medium truncate">High Heels</h4>
+                        <p class="text-[#C5A982] font-bold text-sm">Rs. 1,800</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. SECTION 4: BANGLES (Horizontal Slider) -->
+    <section id="bangles-section" class="py-10 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-end mb-6">
+                <h3 class="text-xl font-bold uppercase tracking-wide border-l-4 border-[#C5A982] pl-3">Bangles & Sets</h3>
+                <a href="#" class="text-xs text-gray-500 underline">View All</a>
+            </div>
+            <div class="flex overflow-x-auto gap-4 pb-4 scrollbar-hide">
+                <div class="min-w-[220px] bg-white border border-gray-100 rounded-lg overflow-hidden group">
+                    <div class="relative">
+                        <a href="product.html"><img src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=500" class="w-full h-64 object-cover"></a>
+                        <button class="absolute bottom-0 w-full bg-black text-white text-xs py-2 uppercase font-bold translate-y-full group-hover:translate-y-0 transition">Add to Cart</button>
+                    </div>
+                    <div class="p-3">
+                        <h4 class="text-sm font-medium truncate">Gold Bangles Set</h4>
+                        <p class="text-[#C5A982] font-bold text-sm">Rs. 1,000</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. FOOTER (Black & Gold) -->
     <footer class="bg-black text-white pt-12 pb-24">
         <div class="container mx-auto px-4">
-            
-            <!-- Subscribe Box -->
             <div class="mb-12">
                 <h3 class="text-[#C5A982] text-xl font-bold mb-2">About Us</h3>
                 <p class="text-gray-400 text-sm mb-6">At Prime Business, we believe that fabric is more than just material – it's an expression of style, tradition, and comfort.</p>
-                
                 <div class="flex flex-col gap-2">
                     <input type="email" placeholder="Enter Your Email Address" class="w-full p-3 text-black outline-none bg-white">
                     <button class="gold-btn w-full py-3 font-bold uppercase tracking-widest text-sm">SUBSCRIBE</button>
                 </div>
             </div>
-
-            <!-- Links Grid -->
             <div class="grid grid-cols-2 md:grid-cols-2 gap-8 text-sm">
-                
-                <!-- Useful Links -->
                 <div>
                     <h4 class="text-[#C5A982] font-bold mb-4 text-lg">Useful Links</h4>
                     <ul class="space-y-3 text-white">
@@ -124,8 +205,6 @@
                         <li><a href="#">Contact Us</a></li>
                     </ul>
                 </div>
-
-                <!-- Customer Support -->
                 <div>
                     <h4 class="text-[#C5A982] font-bold mb-4 text-lg">Customer Support</h4>
                     <ul class="space-y-3 text-white">
@@ -136,8 +215,6 @@
                     </ul>
                 </div>
             </div>
-
-            <!-- Contact Info -->
             <div class="mt-8">
                 <h4 class="text-[#C5A982] font-bold mb-4 text-lg">Contact Info</h4>
                 <ul class="space-y-3 text-white text-sm">
@@ -150,33 +227,22 @@
                     <a href="#" class="text-[#C5A982] text-xl"><i class="fab fa-whatsapp"></i></a>
                 </div>
             </div>
-
-            <!-- Copyright -->
             <div class="mt-10 pt-4 border-t border-gray-800 text-center text-xs text-gray-500">
                 &copy; 2025 Prime Business. All rights reserved.
             </div>
         </div>
     </footer>
 
-    <!-- 6. BOTTOM NAVIGATION (Restored) -->
+    <!-- 9. BOTTOM NAVIGATION -->
     <div class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 flex justify-around py-3 z-50 text-gray-500 text-xs font-medium shadow-[0_-5px_10px_rgba(0,0,0,0.05)]">
-        <a href="index.html" class="flex flex-col items-center text-black">
-            <i class="fas fa-home text-xl mb-1"></i>
-            Home
-        </a>
-        <a href="#" class="flex flex-col items-center hover:text-black">
-            <i class="far fa-heart text-xl mb-1"></i>
-            Wishlist
-        </a>
+        <a href="index.html" class="flex flex-col items-center text-black"><i class="fas fa-home text-xl mb-1"></i>Home</a>
+        <a href="#" class="flex flex-col items-center hover:text-black"><i class="far fa-heart text-xl mb-1"></i>Wishlist</a>
         <a href="cart.html" class="flex flex-col items-center hover:text-black relative">
             <i class="fas fa-shopping-bag text-xl mb-1"></i>
             <span class="absolute top-0 right-4 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">1</span>
             Cart
         </a>
-        <a href="profile.html" class="flex flex-col items-center hover:text-black">
-            <i class="far fa-user text-xl mb-1"></i>
-            Account
-        </a>
+        <a href="profile.html" class="flex flex-col items-center hover:text-black"><i class="far fa-user text-xl mb-1"></i>Account</a>
     </div>
 
 </body>
