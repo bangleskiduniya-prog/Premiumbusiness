@@ -20,66 +20,22 @@
         <a href="index.html" class="text-sm text-gray-500 hover:text-black"><i class="fas fa-arrow-left mr-2"></i> Back</a>
     </nav>
 
-    <!-- Cart Items -->
+    <!-- Cart Items Section -->
     <section class="container mx-auto px-4 py-6">
         <h1 class="text-2xl font-medium mb-6 uppercase">Your Bag</h1>
 
-        <div class="bg-white p-4 shadow-sm rounded-lg mb-6">
-            
-            <!-- Item 1 -->
-            <div class="flex gap-4 border-b pb-4 mb-4 item-row">
-                <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=150" class="w-20 h-24 object-cover rounded">
-                <div class="flex-1">
-                    <div class="flex justify-between">
-                        <h3 class="font-bold text-sm">Premium Bridal Suit</h3>
-                        <p class="font-bold text-sm item-total">Rs. 2,500</p>
-                    </div>
-                    <p class="text-xs text-gray-500 mb-2">Size: M</p>
-                    <!-- Hidden Price for Calculation -->
-                    <input type="hidden" class="price-val" value="2500">
-                    
-                    <div class="flex justify-between items-center mt-2">
-                        <div class="flex border border-gray-300 rounded">
-                            <button onclick="changeQty(this, -1)" class="px-3 py-1 bg-gray-100">-</button>
-                            <input type="text" value="1" class="w-10 text-center outline-none text-sm qty-input" readonly>
-                            <button onclick="changeQty(this, 1)" class="px-3 py-1 bg-gray-100">+</button>
-                        </div>
-                        <button onclick="removeItem(this)" class="text-red-400 text-xs underline">Remove</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Item 2 -->
-            <div class="flex gap-4 border-b pb-4 mb-4 item-row">
-                <img src="https://images.unsplash.com/photo-1560343090-f0409e92791a?w=150" class="w-20 h-24 object-cover rounded">
-                <div class="flex-1">
-                    <div class="flex justify-between">
-                        <h3 class="font-bold text-sm">Men's Leather Shoes</h3>
-                        <p class="font-bold text-sm item-total">Rs. 1,200</p>
-                    </div>
-                    <p class="text-xs text-gray-500 mb-2">Size: 42</p>
-                    <!-- Hidden Price for Calculation -->
-                    <input type="hidden" class="price-val" value="1200">
-                    
-                    <div class="flex justify-between items-center mt-2">
-                        <div class="flex border border-gray-300 rounded">
-                            <button onclick="changeQty(this, -1)" class="px-3 py-1 bg-gray-100">-</button>
-                            <input type="text" value="1" class="w-10 text-center outline-none text-sm qty-input" readonly>
-                            <button onclick="changeQty(this, 1)" class="px-3 py-1 bg-gray-100">+</button>
-                        </div>
-                        <button onclick="removeItem(this)" class="text-red-400 text-xs underline">Remove</button>
-                    </div>
-                </div>
-            </div>
-
+        <!-- Dynamic Cart Container -->
+        <div class="bg-white p-4 shadow-sm rounded-lg mb-6" id="cart-items">
+            <!-- Items will be loaded here automatically -->
+            <p class="text-center text-gray-500 py-10">Your cart is empty.</p>
         </div>
 
-        <!-- Summary -->
+        <!-- Order Summary -->
         <div class="bg-white p-6 shadow-sm rounded-lg border border-gray-100">
             <h3 class="text-lg font-bold mb-4 uppercase">Order Summary</h3>
             <div class="flex justify-between mb-2 text-sm text-gray-600">
                 <span>Subtotal</span>
-                <span id="subtotal">Rs. 3,700</span>
+                <span id="subtotal">Rs. 0</span>
             </div>
             <div class="flex justify-between mb-4 text-sm text-gray-600">
                 <span>Shipping</span>
@@ -87,7 +43,7 @@
             </div>
             <div class="flex justify-between mb-6 text-xl font-bold text-black border-t pt-4">
                 <span>Total</span>
-                <span id="grand-total" class="text-[#C5A982]">Rs. 3,900</span>
+                <span id="grand-total" class="text-[#C5A982]">Rs. 200</span>
             </div>
             <a href="checkout.html" class="block w-full gold-btn text-white text-center font-bold py-3 rounded uppercase text-sm shadow-lg">
                 Proceed to Checkout
@@ -95,58 +51,100 @@
         </div>
     </section>
 
-    <!-- Bottom Nav -->
-    <div class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 flex justify-around py-3 z-50 text-gray-500 text-xs font-medium">
+    <!-- Bottom Nav (Updated with Shop Icon) -->
+    <div class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 flex justify-around py-3 z-50 text-gray-500 text-xs font-medium shadow-[0_-5px_10px_rgba(0,0,0,0.05)]">
         <a href="index.html" class="flex flex-col items-center hover:text-black"><i class="fas fa-home text-xl mb-1"></i>Home</a>
-        <a href="#" class="flex flex-col items-center hover:text-black"><i class="far fa-heart text-xl mb-1"></i>Wishlist</a>
+        <a href="index.html#category-grid-section" class="flex flex-col items-center hover:text-black"><i class="fas fa-th-large text-xl mb-1"></i>Shop</a>
         <a href="cart.html" class="flex flex-col items-center text-black relative">
             <i class="fas fa-shopping-bag text-xl mb-1"></i>
-            <span class="absolute top-0 right-4 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">2</span>
-            Cart
+            <span id="nav-cart-count" class="absolute top-0 right-4 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">0</span>
         </a>
         <a href="profile.html" class="flex flex-col items-center hover:text-black"><i class="far fa-user text-xl mb-1"></i>Account</a>
     </div>
 
+    <!-- Logic Script -->
     <script>
-        function changeQty(btn, change) {
-            const input = btn.parentElement.querySelector('.qty-input');
-            let newValue = parseInt(input.value) + change;
-            if (newValue < 1) newValue = 1;
-            input.value = newValue;
-            updateCart();
-        }
-
-        function updateCart() {
-            let subtotal = 0;
-            const rows = document.querySelectorAll('.item-row');
+        // Load Cart from LocalStorage
+        function loadCart() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const container = document.getElementById('cart-items');
             
-            rows.forEach(row => {
-                // Get Price from hidden input (No Rs. or commas issue)
-                const price = parseInt(row.querySelector('.price-val').value);
-                const qty = parseInt(row.querySelector('.qty-input').value);
-                
-                const total = price * qty;
-                row.querySelector('.item-total').innerText = "Rs. " + total.toLocaleString();
-                
-                subtotal += total;
+            if(cart.length === 0) {
+                container.innerHTML = '<p class="text-center text-gray-500 py-10">Your cart is empty.</p>';
+                updateTotals(0);
+                return;
+            }
+
+            container.innerHTML = '';
+            let subtotal = 0;
+
+            cart.forEach((item, index) => {
+                let itemTotal = item.price * item.qty;
+                subtotal += itemTotal;
+
+                // Optimization: Resize Image for Cart
+                let displayImg = item.image;
+                if(displayImg.includes('cloudinary.com')) {
+                    displayImg = displayImg.replace('/upload/', '/upload/w_150,q_auto,f_auto/');
+                }
+
+                container.innerHTML += `
+                    <div class="flex gap-4 border-b pb-4 mb-4 item-row">
+                        <img src="${displayImg}" class="w-20 h-24 object-cover rounded">
+                        <div class="flex-1">
+                            <div class="flex justify-between">
+                                <h3 class="font-bold text-sm">${item.name}</h3>
+                                <p class="font-bold text-sm">Rs. ${itemTotal.toLocaleString()}</p>
+                            </div>
+                            <p class="text-xs text-gray-500 mb-2">Price: Rs. ${item.price}</p>
+                            
+                            <div class="flex justify-between items-center mt-2">
+                                <div class="flex border border-gray-300 rounded">
+                                    <button onclick="changeQty(${index}, -1)" class="px-3 py-1 bg-gray-100">-</button>
+                                    <input type="text" value="${item.qty}" class="w-10 text-center outline-none text-sm" readonly>
+                                    <button onclick="changeQty(${index}, 1)" class="px-3 py-1 bg-gray-100">+</button>
+                                </div>
+                                <button onclick="removeItem(${index})" class="text-red-400 text-xs underline">Remove</button>
+                            </div>
+                        </div>
+                    </div>`;
             });
 
-            const shipping = 200;
-            const grandTotal = subtotal + shipping;
-
-            document.getElementById('subtotal').innerText = "Rs. " + subtotal.toLocaleString();
-            document.getElementById('grand-total').innerText = "Rs. " + grandTotal.toLocaleString();
+            updateTotals(subtotal);
+            document.getElementById('nav-cart-count').innerText = cart.reduce((acc, item) => acc + item.qty, 0);
         }
 
-        function removeItem(btn) {
+        // Change Quantity
+        function changeQty(index, change) {
+            let cart = JSON.parse(localStorage.getItem('cart'));
+            cart[index].qty += change;
+            if(cart[index].qty < 1) cart[index].qty = 1;
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCart();
+        }
+
+        // Remove Item
+        function removeItem(index) {
             if(confirm("Remove item?")) {
-                btn.closest('.item-row').remove();
-                updateCart();
+                let cart = JSON.parse(localStorage.getItem('cart'));
+                cart.splice(index, 1);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                loadCart();
             }
         }
-        
-        // Run on load
-        updateCart();
+
+        // Update Totals
+        function updateTotals(subtotal) {
+            document.getElementById('subtotal').innerText = "Rs. " + subtotal.toLocaleString();
+            document.getElementById('grand-total').innerText = "Rs. " + (subtotal + 200).toLocaleString();
+            
+            // Save total for checkout page
+            const orderData = { name: "Cart Items", price: subtotal, qty: 1, total: subtotal };
+            localStorage.setItem('checkoutOrder', JSON.stringify(orderData));
+        }
+
+        // Initial Load
+        loadCart();
     </script>
 
 </body>

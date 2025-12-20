@@ -11,131 +11,125 @@
         body { font-family: 'Jost', sans-serif; }
         .gold-btn { background-color: #C5A982; color: white; }
         .gold-text { color: #C5A982; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body class="bg-white text-gray-800">
 
-    <!-- Navbar -->
     <nav class="border-b py-4 px-6 flex justify-between items-center sticky top-0 bg-white z-50">
         <a href="index.html" class="text-xl font-bold tracking-widest border-2 border-black px-2">PRIME</a>
         <div class="flex gap-4">
             <a href="index.html"><i class="fas fa-home text-xl"></i></a>
             <a href="cart.html" class="relative">
                 <i class="fas fa-shopping-bag text-xl"></i>
-                <span class="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">0</span>
+                <span id="cart-count" class="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">0</span>
             </a>
         </div>
     </nav>
 
-    <!-- Product Section -->
     <section class="container mx-auto px-4 py-10">
-        <div class="text-sm text-gray-400 mb-6">
-            <a href="index.html">Home</a> / <span id="bread-cat" class="text-black">...</span> / <span id="bread-name">...</span>
-        </div>
-
+        <div class="text-sm text-gray-400 mb-6"><a href="index.html">Home</a> / <span id="bread-cat" class="text-black">...</span> / <span id="bread-name">...</span></div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10" id="product-content">
-            <!-- Loading State -->
-            <div class="col-span-2 text-center py-20">
-                <i class="fas fa-spinner fa-spin text-4xl text-[#C5A982]"></i>
-                <p class="mt-4 text-gray-500">Loading Product...</p>
+            <div class="col-span-2 text-center py-20"><i class="fas fa-spinner fa-spin text-4xl text-[#C5A982]"></i><p class="mt-4 text-gray-500">Loading Product...</p></div>
+        </div>
+    </section>
+
+    <!-- RELATED PRODUCTS SECTION -->
+    <section class="py-10 bg-gray-50 border-t">
+        <div class="container mx-auto px-4">
+            <h3 class="text-xl font-bold uppercase tracking-wide mb-6">You May Also Like</h3>
+            <div id="related-products" class="flex overflow-x-auto gap-4 pb-4 scrollbar-hide">
+                <p class="text-gray-400 text-sm">Loading suggestions...</p>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="bg-black text-white pt-12 pb-8 mt-10">
-        <div class="container mx-auto px-4">
-            <div class="border-t border-gray-800 pt-6 text-center text-xs text-gray-500">
-                &copy; 2025 Prime Business. All rights reserved.
-            </div>
+        <div class="container mx-auto px-4 text-center">
+            <div class="border-t border-gray-800 pt-6 text-xs text-gray-500">&copy; 2025 Prime Business. All rights reserved.</div>
         </div>
     </footer>
 
-    <!-- LOGIC -->
     <script type="module">
         import { db } from './config.js';
-        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { doc, getDoc, collection, query, where, getDocs, limit } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
         let currentProduct = null;
         let basePrice = 0;
 
         async function loadProduct() {
-            // Get ID from URL
             const params = new URLSearchParams(window.location.search);
             const id = params.get('id');
-
-            if(!id) {
-                document.getElementById('product-content').innerHTML = '<p class="text-center col-span-2">Product not found.</p>';
-                return;
-            }
+            if(!id) return;
 
             const docSnap = await getDoc(doc(db, "products", id));
-            
             if (docSnap.exists()) {
-                currentProduct = docSnap.data();
+                currentProduct = { id: docSnap.id, ...docSnap.data() };
                 basePrice = currentProduct.price;
                 renderProduct(currentProduct);
-            } else {
-                document.getElementById('product-content').innerHTML = '<p class="text-center col-span-2">Product does not exist.</p>';
+                loadRelated(currentProduct.category, currentProduct.id);
             }
         }
 
         function renderProduct(p) {
             document.getElementById('bread-cat').innerText = p.category;
             document.getElementById('bread-name').innerText = p.name;
-
-            // Generate Images HTML
             let mainImg = p.images[0];
             let thumbnails = p.images.map(img => `<img src="${img}" onclick="changeImg('${img}')" class="w-16 h-16 object-cover rounded cursor-pointer border hover:border-black">`).join('');
 
             const html = `
-                <div class="relative">
-                    <img id="main-img" src="${mainImg}" class="w-full rounded-lg shadow-sm mb-4">
-                    <div class="flex gap-2">${thumbnails}</div>
-                </div>
-
+                <div class="relative"><img id="main-img" src="${mainImg}" class="w-full rounded-lg shadow-sm mb-4"><div class="flex gap-2">${thumbnails}</div></div>
                 <div>
                     <h1 class="text-3xl font-medium mb-2">${p.name}</h1>
-                    <div class="flex items-center gap-3 mb-4">
-                        ${p.salePrice ? `<span class="text-gray-400 line-through text-lg">Rs. ${p.salePrice}</span>` : ''}
-                        <span id="display-price" class="text-2xl font-bold text-[#C5A982]">Rs. ${p.price}</span>
-                    </div>
-
+                    <div class="flex items-center gap-3 mb-4"><span id="display-price" class="text-2xl font-bold text-[#C5A982]">Rs. ${p.price}</span></div>
                     <p class="text-gray-500 text-sm leading-relaxed mb-6">${p.description}</p>
-                    
-                    <div class="mb-4 text-sm">
-                        <p><strong>Colors:</strong> ${p.colors}</p>
-                        <p><strong>Sizes:</strong> ${p.sizes}</p>
-                    </div>
-
-                    <div class="flex items-center gap-4 mb-6">
-                        <span class="text-sm font-bold uppercase">Quantity:</span>
-                        <div class="flex border border-gray-300 rounded">
-                            <button onclick="updateQty(-1)" class="px-3 py-1 hover:bg-gray-100">-</button>
-                            <input type="text" id="qty" value="1" class="w-10 text-center border-x border-gray-300 outline-none" readonly>
-                            <button onclick="updateQty(1)" class="px-3 py-1 hover:bg-gray-100">+</button>
-                        </div>
-                    </div>
-
+                    <div class="mb-4 text-sm"><p><strong>Colors:</strong> ${p.colors}</p><p><strong>Sizes:</strong> ${p.sizes}</p></div>
+                    <div class="flex items-center gap-4 mb-6"><span class="text-sm font-bold uppercase">Quantity:</span><div class="flex border border-gray-300 rounded"><button onclick="updateQty(-1)" class="px-3 py-1 hover:bg-gray-100">-</button><input type="text" id="qty" value="1" class="w-10 text-center border-x border-gray-300 outline-none" readonly><button onclick="updateQty(1)" class="px-3 py-1 hover:bg-gray-100">+</button></div></div>
                     <div class="flex flex-col gap-3">
                         <button onclick="addToCart()" class="w-full border-2 border-black py-3 font-bold uppercase hover:bg-black hover:text-white transition">Add to Cart</button>
                         <button onclick="buyNow()" class="w-full bg-[#C5A982] text-white py-3 font-bold uppercase hover:bg-[#b09268] transition shadow-lg text-center">Buy Now</button>
                     </div>
-                </div>
-            `;
+                </div>`;
             document.getElementById('product-content').innerHTML = html;
         }
 
-        // Global Functions for Buttons
+        async function loadRelated(category, currentId) {
+            const q = query(collection(db, "products"), where("category", "==", category), limit(5));
+            const snap = await getDocs(q);
+            const container = document.getElementById('related-products');
+            container.innerHTML = '';
+            
+            snap.forEach(d => {
+                if(d.id !== currentId) {
+                    const p = d.data();
+                    container.innerHTML += `
+                        <div class="min-w-[180px] bg-white shadow-sm rounded-lg overflow-hidden group">
+                            <a href="product.html?id=${d.id}"><img src="${p.images[0]}" class="w-full h-48 object-cover"></a>
+                            <div class="p-3"><h4 class="text-sm font-medium truncate">${p.name}</h4><p class="text-[#C5A982] font-bold text-sm">Rs. ${p.price}</p></div>
+                        </div>`;
+                }
+            });
+            if(container.innerHTML === '') container.innerHTML = '<p class="text-sm text-gray-400 pl-4">No related products found.</p>';
+        }
+
         window.changeImg = (src) => { document.getElementById('main-img').src = src; }
-        
         window.updateQty = (change) => {
             let qtyInput = document.getElementById('qty');
             let newQty = parseInt(qtyInput.value) + change;
             if (newQty < 1) newQty = 1;
             qtyInput.value = newQty;
-            let newPrice = basePrice * newQty;
-            document.getElementById('display-price').innerText = "Rs. " + newPrice.toLocaleString();
+            document.getElementById('display-price').innerText = "Rs. " + (basePrice * newQty).toLocaleString();
+        }
+
+        window.addToCart = () => {
+            const qty = parseInt(document.getElementById('qty').value);
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let existing = cart.find(item => item.id === currentProduct.id);
+            if(existing) existing.qty += qty;
+            else cart.push({ id: currentProduct.id, name: currentProduct.name, price: basePrice, image: currentProduct.images[0], qty: qty });
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            alert("Added to Cart!");
         }
 
         window.buyNow = () => {
@@ -146,10 +140,12 @@
             window.location.href = "checkout.html";
         }
 
-        window.addToCart = () => { alert("Added to Cart!"); }
+        function updateCartCount() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            document.getElementById('cart-count').innerText = cart.reduce((acc, item) => acc + item.qty, 0);
+        }
 
-        // Init
-        loadProduct();
+        loadProduct(); updateCartCount();
     </script>
 </body>
 </html>
