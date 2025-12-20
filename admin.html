@@ -78,7 +78,12 @@
             <div id="tab-products" class="tab-content hidden">
                 <h2 class="text-3xl font-bold mb-6">Manage Products</h2>
                 <div class="bg-white p-6 rounded shadow mb-8">
-                    <h3 class="font-bold text-xl mb-4">Add New Product</h3>
+                    <h3 class="font-bold text-xl mb-4" id="form-title">Add New Product</h3>
+                    
+                    <!-- Hidden ID for Editing -->
+                    <input type="hidden" id="edit-id">
+                    <input type="hidden" id="existing-images">
+
                     <div class="grid grid-cols-2 gap-4 mb-4">
                         <input type="text" id="prod-name" placeholder="Product Name" class="border p-2 rounded">
                         <select id="prod-cat" class="border p-2 rounded"><option>Select Category</option></select>
@@ -92,12 +97,15 @@
                     <div class="mb-4">
                         <label class="block font-bold mb-2">Product Gallery (Max 3 Images)</label>
                         <input type="file" id="prod-imgs" multiple accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                        <p class="text-xs text-red-500 mt-1">* You can select up to 3 images only.</p>
+                        <p class="text-xs text-gray-400 mt-1" id="edit-msg">* Leave empty to keep existing images while editing.</p>
                     </div>
 
-                    <button onclick="addProduct()" class="w-full bg-[#C5A982] text-white py-3 rounded font-bold flex justify-center items-center gap-2">
-                        Upload Product <div id="prod-loader" class="loader"></div>
-                    </button>
+                    <div class="flex gap-2">
+                        <button onclick="addProduct()" id="btn-submit" class="flex-1 bg-[#C5A982] text-white py-3 rounded font-bold flex justify-center items-center gap-2">
+                            Upload Product <div id="prod-loader" class="loader"></div>
+                        </button>
+                        <button onclick="resetForm()" id="btn-cancel" class="hidden bg-gray-500 text-white px-6 rounded font-bold">Cancel</button>
+                    </div>
                 </div>
                 <div id="products-list" class="grid grid-cols-1 gap-4"></div>
             </div>
@@ -121,7 +129,7 @@
     <!-- LOGIC -->
     <script type="module">
         import { db, CLOUDINARY_CLOUD_NAME, CLOUDINARY_PRESET } from './config.js';
-        import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, setDoc, orderBy, query } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, setDoc, orderBy, query, getDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
         // LOGIN
         window.checkLogin = () => {
@@ -192,28 +200,35 @@
             });
         }
 
-        // PRODUCTS (WITH LIMIT CHECK)
+        // --- PRODUCTS (ADD & EDIT) ---
         window.addProduct = async () => {
+            const editId = document.getElementById('edit-id').value;
             const name = document.getElementById('prod-name').value;
             const cat = document.getElementById('prod-cat').value;
             const price = document.getElementById('prod-price').value;
             const files = document.getElementById('prod-imgs').files;
             
-            if(!name || !price || files.length === 0) return alert("Fill required fields");
+            if(!name || !price) return alert("Fill required fields");
             
-            // --- LIMIT CHECK ---
-            if(files.length > 3) {
-                return alert("Error: You can only upload a maximum of 3 images per product.");
-            }
+            // Limit Check
+            if(files.length > 3) return alert("Max 3 images allowed.");
 
             document.getElementById('prod-loader').style.display = 'block';
+            
             let imageUrls = [];
-            for(let i=0; i<files.length; i++) {
-                const url = await uploadImage(files[i]);
-                imageUrls.push(url);
+            
+            // If editing and no new files, keep old ones
+            if(editId && files.length === 0) {
+                imageUrls = JSON.parse(document.getElementById('existing-images').value);
+            } else {
+                // Upload new images
+                for(let i=0; i<files.length; i++) {
+                    const url = await uploadImage(files[i]);
+                    imageUrls.push(url);
+                }
             }
 
-            await addDoc(collection(db, "products"), {
+            const productData = {
                 name, category: cat, price: Number(price),
                 salePrice: document.getElementById('prod-sale').value,
                 colors: document.getElementById('prod-colors').value,
@@ -221,19 +236,89 @@
                 description: document.getElementById('prod-desc').value,
                 images: imageUrls,
                 timestamp: new Date()
-            });
+            };
+
+            if(editId) {
+                // Update Existing
+                await updateDoc(doc(db, "products", editId), productData);
+                alert("Product Updated!");
+            } else {
+                // Add New
+                if(imageUrls.length === 0) {
+                    document.getElementById('prod-loader').style.display = 'none';
+                    return alert("Please select images for new product.");
+                }
+                await addDoc(collection(db, "products"), productData);
+                alert("Product Uploaded!");
+            }
 
             document.getElementById('prod-loader').style.display = 'none';
-            alert("Product Uploaded!");
+            resetForm();
             loadProducts();
         }
+
+        // EDIT FUNCTION
+        window.editProduct = async (id) => {
+            const docSnap = await getDoc(doc(db, "products", id));
+            if(docSnap.exists()) {
+                const p = docSnap.data();
+                
+                // Fill Form
+                document.getElementById('edit-id').value = id;
+                document.getElementById('existing-images').value = JSON.stringify(p.images);
+                document.getElementById('prod-name').value = p.name;
+                document.getElementById('prod-cat').value = p.category;
+                document.getElementById('prod-price').value = p.price;
+                document.getElementById('prod-sale').value = p.salePrice || "";
+                document.getElementById('prod-colors').value = p.colors || "";
+                document.getElementById('prod-sizes').value = p.sizes || "";
+                document.getElementById('prod-desc').value = p.description || "";
+
+                // Change UI
+                document.getElementById('form-title').innerText = "Edit Product";
+                document.getElementById('btn-submit').innerText = "Update Product";
+                document.getElementById('btn-cancel').classList.remove('hidden');
+                
+                // Scroll to top
+                document.getElementById('tab-products').scrollIntoView({behavior: 'smooth'});
+            }
+        }
+
+        // RESET FORM
+        window.resetForm = () => {
+            document.getElementById('edit-id').value = "";
+            document.getElementById('existing-images').value = "";
+            document.getElementById('prod-name').value = "";
+            document.getElementById('prod-price').value = "";
+            document.getElementById('prod-sale').value = "";
+            document.getElementById('prod-colors').value = "";
+            document.getElementById('prod-sizes').value = "";
+            document.getElementById('prod-desc').value = "";
+            document.getElementById('prod-imgs').value = "";
+            
+            document.getElementById('form-title').innerText = "Add New Product";
+            document.getElementById('btn-submit').innerText = "Upload Product";
+            document.getElementById('btn-cancel').classList.add('hidden');
+        }
+
         async function loadProducts() {
             const list = document.getElementById('products-list');
             list.innerHTML = '';
             const snap = await getDocs(query(collection(db, "products"), orderBy("timestamp", "desc")));
             snap.forEach(d => {
                 const p = d.data();
-                list.innerHTML += `<div class="bg-white p-4 rounded shadow flex gap-4 items-center"><img src="${p.images[0]}" class="w-16 h-16 object-cover rounded"><div class="flex-1"><h4 class="font-bold">${p.name}</h4><p class="text-sm text-gray-500">${p.category} - Rs. ${p.price}</p></div><button onclick="deleteItem('products', '${d.id}')" class="bg-red-100 text-red-600 px-3 py-1 rounded">Delete</button></div>`;
+                list.innerHTML += `
+                    <div class="bg-white p-4 rounded shadow flex gap-4 items-center">
+                        <img src="${p.images[0]}" class="w-16 h-16 object-cover rounded">
+                        <div class="flex-1">
+                            <h4 class="font-bold">${p.name}</h4>
+                            <p class="text-sm text-gray-500">${p.category} - Rs. ${p.price}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="editProduct('${d.id}')" class="bg-blue-100 text-blue-600 px-3 py-1 rounded text-sm">Edit</button>
+                            <button onclick="deleteItem('products', '${d.id}')" class="bg-red-100 text-red-600 px-3 py-1 rounded text-sm">Delete</button>
+                        </div>
+                    </div>`;
             });
         }
 
