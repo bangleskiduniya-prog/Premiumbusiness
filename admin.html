@@ -113,7 +113,8 @@
 
                     <div class="flex gap-2">
                         <button onclick="addProduct()" id="btn-submit" class="flex-1 bg-[#C5A982] text-white py-3 rounded font-bold flex justify-center items-center gap-2">
-                            Upload Product <div id="prod-loader" class="loader"></div>
+                            <span id="btn-text">Upload Product</span> 
+                            <div id="prod-loader" class="loader"></div>
                         </button>
                         <button onclick="resetForm()" id="btn-cancel" class="hidden bg-gray-500 text-white px-6 rounded font-bold">Cancel</button>
                     </div>
@@ -278,7 +279,9 @@
                 console.error("Error:", error);
                 alert("Error: " + error.message);
             } finally {
-                document.getElementById('prod-loader').style.display = 'none';
+                // Check if element exists before accessing style (Fix for null error)
+                const loader = document.getElementById('prod-loader');
+                if(loader) loader.style.display = 'none';
             }
         }
 
@@ -299,7 +302,8 @@
                 document.getElementById('prod-desc').value = p.description || "";
 
                 document.getElementById('form-title').innerText = "Edit Product";
-                document.getElementById('btn-submit').innerText = "Update Product";
+                // Update text inside span, not button, to preserve loader
+                document.getElementById('btn-text').innerText = "Update Product";
                 document.getElementById('btn-cancel').classList.remove('hidden');
                 
                 document.getElementById('tab-products').scrollIntoView({behavior: 'smooth'});
@@ -319,7 +323,8 @@
             document.getElementById('prod-imgs').value = "";
             
             document.getElementById('form-title').innerText = "Add New Product";
-            document.getElementById('btn-submit').innerText = "Upload Product";
+            // Update text inside span
+            document.getElementById('btn-text').innerText = "Upload Product";
             document.getElementById('btn-cancel').classList.add('hidden');
         }
 
