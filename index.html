@@ -15,6 +15,8 @@
         /* Floating WhatsApp */
         .float-wa { position: fixed; bottom: 90px; right: 20px; background-color: #25d366; color: white; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 2px 2px 10px rgba(0,0,0,0.2); z-index: 100; transition: transform 0.3s; }
         .float-wa:hover { transform: scale(1.1); }
+        /* Smooth Scroll */
+        html { scroll-behavior: smooth; }
     </style>
 </head>
 <body class="bg-white text-gray-800">
@@ -61,7 +63,7 @@
         </div>
         <div class="absolute inset-0 flex flex-col justify-center items-center text-white bg-black bg-opacity-30 z-10">
             <h2 class="text-5xl font-light mb-6 tracking-wider text-center">New Collection</h2>
-            <button class="bg-white text-black px-10 py-3 uppercase tracking-widest text-sm hover:bg-black hover:text-white transition">Shop Now</button>
+            <a href="#category-grid-section" class="bg-white text-black px-10 py-3 uppercase tracking-widest text-sm hover:bg-black hover:text-white transition">Shop Now</a>
         </div>
     </header>
 
@@ -94,7 +96,7 @@
                     <h4 class="text-[#C5A982] font-bold mb-4 text-lg">Useful Links</h4>
                     <ul class="space-y-3 text-white">
                         <li><a href="#">Home</a></li>
-                        <li><a href="#">Shop</a></li>
+                        <li><a href="#category-grid-section">Shop</a></li>
                         <li><a href="#">About Us</a></li>
                         <li><a href="#">Contact Us</a></li>
                     </ul>
@@ -123,11 +125,11 @@
         </div>
     </footer>
 
-    <!-- BOTTOM NAV (Updated: Wishlist -> Shop) -->
+    <!-- BOTTOM NAV -->
     <div class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 flex justify-around py-3 z-50 text-gray-500 text-xs font-medium shadow-[0_-5px_10px_rgba(0,0,0,0.05)]">
         <a href="index.html" class="flex flex-col items-center text-black"><i class="fas fa-home text-xl mb-1"></i>Home</a>
         
-        <!-- Shop Icon Here -->
+        <!-- Shop Icon -->
         <a href="#category-grid-section" class="flex flex-col items-center hover:text-black"><i class="fas fa-th-large text-xl mb-1"></i>Shop</a>
         
         <a href="cart.html" class="flex flex-col items-center hover:text-black relative">
@@ -183,7 +185,7 @@
             }
         }
 
-        // 3. LOAD CONTENT (Categories & Products)
+        // 3. LOAD CONTENT (OPTIMIZED IMAGES)
         async function loadContent() {
             const catGrid = document.getElementById('category-grid');
             const sectionsDiv = document.getElementById('dynamic-sections');
@@ -197,8 +199,14 @@
                 const cat = d.data();
                 const catId = d.id;
 
+                // OPTIMIZATION: Resize Category Image
+                let optCatImg = cat.image;
+                if(cat.image.includes('cloudinary.com')) {
+                    optCatImg = cat.image.replace('/upload/', '/upload/w_400,q_auto,f_auto/');
+                }
+
                 // Add to Grid
-                catGrid.innerHTML += `<a href="#sec-${catId}" class="group cursor-pointer text-center block"><div class="overflow-hidden mb-3 rounded-lg"><img src="${cat.image}" class="w-full h-40 object-cover group-hover:scale-110 transition duration-500"></div><h4 class="uppercase font-bold text-xs tracking-widest">${cat.name}</h4></a>`;
+                catGrid.innerHTML += `<a href="#sec-${catId}" class="group cursor-pointer text-center block"><div class="overflow-hidden mb-3 rounded-lg"><img src="${optCatImg}" loading="lazy" class="w-full h-40 object-cover group-hover:scale-110 transition duration-500"></div><h4 class="uppercase font-bold text-xs tracking-widest">${cat.name}</h4></a>`;
                 
                 // Add to Sidebar
                 sidebar.innerHTML += `<li><a href="#sec-${catId}" onclick="toggleMenu()" class="block border-b pb-2">${cat.name}</a></li>`;
@@ -211,8 +219,15 @@
                     let productsHtml = '';
                     prodSnap.forEach(pDoc => {
                         const p = pDoc.data();
+                        
+                        // OPTIMIZATION: Resize Product Image
+                        let optProdImg = p.images[0];
+                        if(p.images[0].includes('cloudinary.com')) {
+                            optProdImg = p.images[0].replace('/upload/', '/upload/w_300,q_auto,f_auto/');
+                        }
+
                         // Link to Product Page with ID
-                        productsHtml += `<div class="min-w-[220px] bg-white shadow-sm rounded-lg overflow-hidden group"><div class="relative"><a href="product.html?id=${pDoc.id}"><img src="${p.images[0]}" class="w-full h-64 object-cover"></a><button class="absolute bottom-0 w-full bg-black text-white text-xs py-2 uppercase font-bold translate-y-full group-hover:translate-y-0 transition">Add to Cart</button></div><div class="p-3"><h4 class="text-sm font-medium truncate">${p.name}</h4><p class="text-[#C5A982] font-bold text-sm">Rs. ${p.price}</p></div></div>`;
+                        productsHtml += `<div class="min-w-[220px] bg-white shadow-sm rounded-lg overflow-hidden group"><div class="relative"><a href="product.html?id=${pDoc.id}"><img src="${optProdImg}" loading="lazy" class="w-full h-64 object-cover"></a><button class="absolute bottom-0 w-full bg-black text-white text-xs py-2 uppercase font-bold translate-y-full group-hover:translate-y-0 transition">Add to Cart</button></div><div class="p-3"><h4 class="text-sm font-medium truncate">${p.name}</h4><p class="text-[#C5A982] font-bold text-sm">Rs. ${p.price}</p></div></div>`;
                     });
 
                     sectionsDiv.innerHTML += `<section id="sec-${catId}" class="py-10 bg-gray-50 odd:bg-white"><div class="container mx-auto px-4"><div class="flex justify-between items-end mb-6"><h3 class="text-xl font-bold uppercase tracking-wide border-l-4 border-[#C5A982] pl-3">${cat.name}</h3><a href="#" class="text-xs text-gray-500 underline">View All</a></div><div class="flex overflow-x-auto gap-4 pb-4 scrollbar-hide">${productsHtml}</div></div></section>`;
