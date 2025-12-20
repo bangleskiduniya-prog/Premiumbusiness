@@ -34,11 +34,10 @@
             <button onclick="toggleSidebar()"><i class="fas fa-bars text-xl"></i></button>
         </div>
 
-        <!-- Sidebar (Responsive) -->
+        <!-- Sidebar -->
         <aside id="admin-sidebar" class="bg-black text-white w-64 flex-col fixed h-full z-30 transform -translate-x-full md:translate-x-0 transition-transform duration-300 md:static">
             <div class="p-6 text-2xl font-bold tracking-widest border-b border-gray-800 hidden md:block">PRIME<span class="text-[#C5A982]">ADMIN</span></div>
             
-            <!-- Mobile Close Button -->
             <div class="md:hidden p-4 text-right">
                 <button onclick="toggleSidebar()"><i class="fas fa-times text-xl"></i></button>
             </div>
@@ -154,20 +153,15 @@
             }
         }
 
-        // MOBILE SIDEBAR TOGGLE
+        // MOBILE SIDEBAR
         window.toggleSidebar = () => {
             const sidebar = document.getElementById('admin-sidebar');
-            if(sidebar.classList.contains('-translate-x-full')) {
-                sidebar.classList.remove('-translate-x-full');
-            } else {
-                sidebar.classList.add('-translate-x-full');
-            }
+            sidebar.classList.toggle('-translate-x-full');
         }
 
         window.showTab = (tabName) => {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById('tab-' + tabName).classList.remove('hidden');
-            // Close sidebar on mobile after click
             if(window.innerWidth < 768) toggleSidebar();
         }
 
@@ -224,66 +218,65 @@
             });
         }
 
-        // --- PRODUCTS (ADD & UPDATE FIXED) ---
+        // --- PRODUCTS (FIXED UPDATE LOGIC) ---
         window.addProduct = async () => {
-            const editId = document.getElementById('edit-id').value;
-            const name = document.getElementById('prod-name').value;
-            const cat = document.getElementById('prod-cat').value;
-            const price = document.getElementById('prod-price').value;
-            const files = document.getElementById('prod-imgs').files;
-            
-            if(!name || !price) return alert("Fill required fields");
-            
-            // Limit Check
-            if(files.length > 3) return alert("Max 3 images allowed.");
-
-            document.getElementById('prod-loader').style.display = 'block';
-            
-            let imageUrls = [];
-            
-            // LOGIC FIX: If editing and no new files, keep old ones
-            if(editId && files.length === 0) {
-                const existing = document.getElementById('existing-images').value;
-                if(existing) imageUrls = JSON.parse(existing);
-            } else {
-                // Upload new images
-                for(let i=0; i<files.length; i++) {
-                    const url = await uploadImage(files[i]);
-                    imageUrls.push(url);
-                }
-            }
-
-            const productData = {
-                name, category: cat, price: Number(price),
-                salePrice: document.getElementById('prod-sale').value,
-                colors: document.getElementById('prod-colors').value,
-                sizes: document.getElementById('prod-sizes').value,
-                description: document.getElementById('prod-desc').value,
-                images: imageUrls,
-                timestamp: new Date()
-            };
-
             try {
+                const editId = document.getElementById('edit-id').value;
+                const name = document.getElementById('prod-name').value;
+                const cat = document.getElementById('prod-cat').value;
+                const price = document.getElementById('prod-price').value;
+                const files = document.getElementById('prod-imgs').files;
+                
+                if(!name || !price) return alert("Fill required fields");
+                if(files.length > 3) return alert("Max 3 images allowed.");
+
+                document.getElementById('prod-loader').style.display = 'block';
+                
+                let imageUrls = [];
+                
+                // LOGIC FIX: Handle Images for Update vs New
+                if(editId && files.length === 0) {
+                    // Editing and keeping old images
+                    const existing = document.getElementById('existing-images').value;
+                    if(existing) imageUrls = JSON.parse(existing);
+                } else {
+                    // New product OR Editing with NEW images
+                    for(let i=0; i<files.length; i++) {
+                        const url = await uploadImage(files[i]);
+                        imageUrls.push(url);
+                    }
+                }
+
+                const productData = {
+                    name, category: cat, price: Number(price),
+                    salePrice: document.getElementById('prod-sale').value,
+                    colors: document.getElementById('prod-colors').value,
+                    sizes: document.getElementById('prod-sizes').value,
+                    description: document.getElementById('prod-desc').value,
+                    images: imageUrls,
+                    timestamp: new Date()
+                };
+
                 if(editId) {
-                    // Update Existing
+                    // Update
                     await updateDoc(doc(db, "products", editId), productData);
                     alert("Product Updated Successfully!");
                 } else {
                     // Add New
                     if(imageUrls.length === 0) {
                         document.getElementById('prod-loader').style.display = 'none';
-                        return alert("Please select images for new product.");
+                        return alert("Please select images.");
                     }
                     await addDoc(collection(db, "products"), productData);
                     alert("Product Uploaded Successfully!");
                 }
-                
+
                 resetForm();
                 loadProducts();
 
             } catch (error) {
                 console.error("Error:", error);
-                alert("Something went wrong: " + error.message);
+                alert("Error: " + error.message);
             } finally {
                 document.getElementById('prod-loader').style.display = 'none';
             }
@@ -295,7 +288,6 @@
             if(docSnap.exists()) {
                 const p = docSnap.data();
                 
-                // Fill Form
                 document.getElementById('edit-id').value = id;
                 document.getElementById('existing-images').value = JSON.stringify(p.images);
                 document.getElementById('prod-name').value = p.name;
@@ -306,12 +298,10 @@
                 document.getElementById('prod-sizes').value = p.sizes || "";
                 document.getElementById('prod-desc').value = p.description || "";
 
-                // Change UI
                 document.getElementById('form-title').innerText = "Edit Product";
                 document.getElementById('btn-submit').innerText = "Update Product";
                 document.getElementById('btn-cancel').classList.remove('hidden');
                 
-                // Scroll to top
                 document.getElementById('tab-products').scrollIntoView({behavior: 'smooth'});
             }
         }
