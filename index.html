@@ -66,7 +66,7 @@
     </header>
 
     <!-- 3. SHOP BY CATEGORY -->
-    <section class="py-12 container mx-auto px-4">
+    <section class="py-12 container mx-auto px-4" id="category-grid-section">
         <h3 class="text-center text-2xl font-medium mb-8 uppercase tracking-wide">Shop By Categories</h3>
         <div id="category-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <p class="text-center col-span-4">Loading Categories...</p>
@@ -123,10 +123,13 @@
         </div>
     </footer>
 
-    <!-- BOTTOM NAV -->
+    <!-- BOTTOM NAV (Updated: Wishlist -> Shop) -->
     <div class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 flex justify-around py-3 z-50 text-gray-500 text-xs font-medium shadow-[0_-5px_10px_rgba(0,0,0,0.05)]">
         <a href="index.html" class="flex flex-col items-center text-black"><i class="fas fa-home text-xl mb-1"></i>Home</a>
-        <a href="#" class="flex flex-col items-center hover:text-black"><i class="far fa-heart text-xl mb-1"></i>Wishlist</a>
+        
+        <!-- Shop Icon Here -->
+        <a href="#category-grid-section" class="flex flex-col items-center hover:text-black"><i class="fas fa-th-large text-xl mb-1"></i>Shop</a>
+        
         <a href="cart.html" class="flex flex-col items-center hover:text-black relative">
             <i class="fas fa-shopping-bag text-xl mb-1"></i>
             <span class="absolute top-0 right-4 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">0</span>
